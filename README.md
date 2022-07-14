@@ -21,8 +21,8 @@ import (
 )
 
 func main() {
-    TgbotChatID := -603254809
-	TgbotToken := "5222610499:AAGNsiLffs9jxR0X1xfQpPi2MPV0HBRnxtw"
+    TgbotChatID := chatid
+	TgbotToken :=  Telegram Bot Token 
 	
 	msg := fmt.Sprintf("\n事件：" + "山豬想睡覺了阿")
 	gotool.SendToTG(TgbotChatID,TgbotToken,msg)
