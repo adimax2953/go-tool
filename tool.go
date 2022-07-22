@@ -2,6 +2,7 @@ package gotool
 
 import (
 	"math/rand"
+	"runtime/debug"
 
 	LogTool "github.com/adimax2953/log-tool"
 )
@@ -18,4 +19,17 @@ func RanInt(num int) int {
 	}
 	rndInt := rand.Intn(num) + 1
 	return rndInt
+}
+
+func recoverPanic() {
+	e := recover()
+	if e != nil {
+		if err, ok := e.(error); ok {
+			LogTool.LogError("", err)
+		} else {
+			LogTool.LogError("%v\n%s", e, debug.Stack())
+		}
+		debug.PrintStack()
+		return
+	}
 }
