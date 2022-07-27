@@ -25,9 +25,9 @@ func recoverPanic() {
 	e := recover()
 	if e != nil {
 		if err, ok := e.(error); ok {
-			LogTool.LogError("", err)
+			LogTool.LogError(err.Error())
 		} else {
-			LogTool.LogError("%v\n%s", e, debug.Stack())
+			LogTool.LogError("", e, debug.Stack())
 		}
 		debug.PrintStack()
 		return
