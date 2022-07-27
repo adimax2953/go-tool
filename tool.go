@@ -21,7 +21,7 @@ func RanInt(num int) int {
 	return rndInt
 }
 
-func recoverPanic() {
+func RecoverPanic() {
 	e := recover()
 	if e != nil {
 		if err, ok := e.(error); ok {
