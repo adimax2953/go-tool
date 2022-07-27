@@ -12,9 +12,14 @@ func IntToStr(n int) string {
 	return strconv.FormatInt(int64(n), 10)
 }
 
-// Int轉str - 將整形轉換成字符串
+// Int32轉str - 將整形轉換成字符串
 func Int32ToStr(n int32) string {
 	return strconv.FormatInt(int64(n), 10)
+}
+
+// Int64轉str - 將整形轉換成字符串
+func Int64ToStr(n int64) string {
+	return strconv.FormatInt(n, 10)
 }
 
 // Float轉Str - 浮點數轉換成字符串
