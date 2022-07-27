@@ -1,11 +1,9 @@
-github.com/adimax2953/log-tool v0.0.0-20220713105936-91eb564d09a9 h1:ltdA3BAg0o8snl85KO0GBzodfxB+wp9Jajy/eyDdf+M=
-github.com/adimax2953/log-tool v0.0.0-20220713105936-91eb564d09a9/go.mod h1:XgH/D0Ujfr5LBJNh2PJVkC0qdwICd0OHiv2BY9ry8+s=
 github.com/adimax2953/log-tool v0.0.0-20220714013708-98353ef2b691 h1:ewymPkbpQ4pw7FEEBUxHryY+wIaZh353Ss6dz8rlLBE=
 github.com/adimax2953/log-tool v0.0.0-20220714013708-98353ef2b691/go.mod h1:XgH/D0Ujfr5LBJNh2PJVkC0qdwICd0OHiv2BY9ry8+s=
+github.com/adimax2953/log-tool v0.0.0-20220722045638-7d3c942bc798 h1:oCcTs6qx/A58H8xVzKiliN+d388sFisbPX2qr1coN/4=
+github.com/adimax2953/log-tool v0.0.0-20220722045638-7d3c942bc798/go.mod h1:XgH/D0Ujfr5LBJNh2PJVkC0qdwICd0OHiv2BY9ry8+s=
 github.com/golang/snappy v0.0.1/go.mod h1:/XxbfmMg8lxefKM7IXC3fBNl/7bRcc72aCRzEWrmP2Q=
 github.com/golang/snappy v0.0.4 h1:yAGX7huGHXlcLOEtBnF4w7FQwA26wojNCwOYAEhLjQM=
 github.com/golang/snappy v0.0.4/go.mod h1:/XxbfmMg8lxefKM7IXC3fBNl/7bRcc72aCRzEWrmP2Q=
 github.com/nsqio/go-nsq v1.1.0 h1:PQg+xxiUjA7V+TLdXw7nVrJ5Jbl3sN86EhGCQj4+FYE=
 github.com/nsqio/go-nsq v1.1.0/go.mod h1:vKq36oyeVXgsS5Q8YEO7WghqidAVXQlcFxzQbQTuDEY=
-github.com/panjf2000/ants v1.3.0 h1:8pQ+8leaLc9lys2viEEr8md0U4RN6uOSUCE9bOYjQ9M=
-github.com/panjf2000/ants v1.3.0/go.mod h1:AaACblRPzq35m1g3enqYcxspbbiOJJYaxU2wMpm1cXY=

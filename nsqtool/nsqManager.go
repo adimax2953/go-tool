@@ -8,11 +8,12 @@ import (
 	"time"
 
 	LogTool "github.com/adimax2953/log-tool"
-
 	"github.com/nsqio/go-nsq"
 )
 
-var producer *nsq.Producer
+var (
+	producer *nsq.Producer
+)
 
 // Config - Represents a Configuration
 type Config struct {
@@ -23,7 +24,7 @@ type Config struct {
 	} `yaml:"nsq"`
 }
 
-func initializeConsumer(nsqconfig *Config, topic, channel string, back func(m *nsq.Message) error) {
+func InitializeConsumer(nsqconfig *Config, topic, channel string, back func(m *nsq.Message) error) {
 	config := nsq.NewConfig()
 	{
 		config.MaxInFlight = 8
@@ -78,7 +79,7 @@ func initializeConsumer(nsqconfig *Config, topic, channel string, back func(m *n
 	<-c.StopChan
 }
 
-func initializePublisher(nsqconfig *Config) {
+func InitializePublisher(nsqconfig *Config) {
 	var err error
 	config := nsq.NewConfig()
 	{

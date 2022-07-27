@@ -5,6 +5,8 @@ import (
 	"testing"
 
 	gotool "github.com/adimax2953/go-tool"
+	LogTool "github.com/adimax2953/log-tool"
+	logType "github.com/adimax2953/log-tool/LogType"
 )
 
 func Test_SendtoTG(t *testing.T) {
@@ -14,6 +16,9 @@ func Test_SendtoTG(t *testing.T) {
 
 	msg := fmt.Sprintf("\n事件：" + "山豬開工了阿")
 	//for true {
+	LogTool.LogDebug("山豬開工了阿")
+	LogTool.LogBase(logType.Config, "山豬開工了阿")
+
 	gotool.SendToTG(TgbotChatID, TgbotToken, msg)
 	//}
 }

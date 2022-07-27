@@ -74,3 +74,12 @@ func Str2int64(str string) int64 {
 	}
 	return int64(num)
 }
+
+// GetStringEnd -取得字串最後一碼字
+func GetStringEnd(str string) string {
+	strlen := len(str)
+	if strlen == 0 {
+		return "14"
+	}
+	return str[strlen-1 : strlen]
+}
