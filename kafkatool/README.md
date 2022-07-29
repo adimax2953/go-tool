@@ -1,4 +1,4 @@
-# go-tool#
+# go-tool
 
 Packet go-tool implements a way to use go more easily
 
