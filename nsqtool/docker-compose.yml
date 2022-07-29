@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  nsqlookupd:
+    image: nsqio/nsq
+    restart: always
+    command: /nsqlookupd
+    hostname: 10.0.2.15
+    networks:
+      - nsq-network
+    ports:
+      - "4160:4160"
+      - "4161:4161"
+
+  nsqd:
+    image: nsqio/nsq
+    restart: always
+    command: /nsqd -data-path=/data --lookupd-tcp-address=10.0.2.15:4160 --max-rdy-count=5000
+    depends_on:
+      - nsqlookupd
+    hostname: 10.0.2.15
+    networks:
+      - nsq-network
+    volumes:
+      - ./data:/data
+    ports:
+      - "4150:4150"
+      - "4151:4151"
+
+  nsqadmin:
+    image: nsqio/nsq
+    restart: always
+    command: /nsqadmin --lookupd-http-address=nsqlookupd:4161
+    depends_on:
+      - nsqlookupd
+    hostname: nsqadmin
+    networks:
+      - nsq-network
+    ports:
+      - "4171:4171"
+      
+networks:
+  nsq-network:
+    driver: bridge
