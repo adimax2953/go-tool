@@ -15,16 +15,14 @@ var (
 	producer *nsq.Producer
 )
 
-// Config - Represents a Configuration
-type Config struct {
-	NSQ struct {
-		Lookups []string `yaml:"nsqlookups"`
-		NSQDs   []string `yaml:"nsqds"`
-		NSQD    string   `yaml:"nsqd"`
-	} `yaml:"nsq"`
+// NsqConfig - Represents a Configuration
+type NsqConfig struct {
+	Lookups []string `yaml:"nsqlookups"`
+	NSQDs   []string `yaml:"nsqds"`
+	NSQD    string   `yaml:"nsqd"`
 }
 
-func InitializeConsumer(nsqconfig *Config, topic, channel string, back func(m *nsq.Message) error) {
+func InitializeConsumer(nsqconfig *NsqConfig, topic, channel string, back func(m *nsq.Message) error) {
 	config := nsq.NewConfig()
 	{
 		config.MaxInFlight = 8
@@ -56,12 +54,12 @@ func InitializeConsumer(nsqconfig *Config, topic, channel string, back func(m *n
 
 	c.AddConcurrentHandlers(nsq.HandlerFunc(back), 10)
 
-	err = c.ConnectToNSQDs(nsqconfig.NSQ.NSQDs)
+	err = c.ConnectToNSQDs(nsqconfig.NSQDs)
 	if err != nil {
 		LogTool.LogFatal("ConnectToNSQDs Error ", err)
 	}
 
-	err = c.ConnectToNSQLookupds(nsqconfig.NSQ.Lookups)
+	err = c.ConnectToNSQLookupds(nsqconfig.Lookups)
 	if err != nil {
 		LogTool.LogFatal("ConnectToNSQLookupds Error ", err)
 	}
@@ -79,7 +77,7 @@ func InitializeConsumer(nsqconfig *Config, topic, channel string, back func(m *n
 	<-c.StopChan
 }
 
-func InitializePublisher(nsqconfig *Config) {
+func InitializePublisher(nsqconfig *NsqConfig) {
 	var err error
 	config := nsq.NewConfig()
 	{
@@ -89,7 +87,7 @@ func InitializePublisher(nsqconfig *Config) {
 		config.MaxBackoffDuration = time.Millisecond * 50
 	}
 
-	producer, err = nsq.NewProducer(nsqconfig.NSQ.NSQD, config)
+	producer, err = nsq.NewProducer(nsqconfig.NSQD, config)
 	if err != nil {
 		LogTool.LogFatal("NewProducer Error ", err)
 	}
@@ -97,6 +95,7 @@ func InitializePublisher(nsqconfig *Config) {
 
 func Send(topic string, msg []byte) error {
 	if producer == nil {
+		LogTool.LogError("producer nil")
 		return nil
 	}
 	return producer.Publish(topic+"#ephemeral", msg)
