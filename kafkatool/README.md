@@ -100,5 +100,8 @@ kafka-console-consumer --bootstrap-server broker:9092 \
 相對的會延長kafka的寫入時間
 
 
+## How to Use
+
+
 
 
