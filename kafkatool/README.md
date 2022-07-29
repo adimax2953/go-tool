@@ -1,8 +1,4 @@
-# go-tool
-
-Packet go-tool implements a way to use go more easily
-
-## Kafka Note Docker...
+# Kafka Note Docker...
 
 建立topic
 docker-compose exec broker \
@@ -35,9 +31,9 @@ kafka-console-consumer --bootstrap-server broker:9092 \
                        
                        
                        
-### kafka 注意事項
+## kafka 注意事項
 
-#### Partition
+### Partition
 
 正常來說，每個partition 能處理的吞吐為幾MB/s（仍需要基於根據本地環境測試後獲取準確指標），增加更多的partitions意味著：
 
@@ -55,9 +51,9 @@ kafka-console-consumer --bootstrap-server broker:9092 \
 考慮最高峰吞吐需要的並行consumer數，調整partition的數目。若是應用場景需要有20個（同一個consumer group中的）consumer並行消費，則據此設置為20個partition
 考慮producer所需的吞吐，調整partition數目（如果producer的吞吐非常高，或是在接下來兩年內都比較高，則增加partition的數目）
 
-##### Partition 只能增加不能減少
+#### Partition 只能增加不能減少
 
-#### Replication Factor
+### Replication Factor
 
 此參數決定的是records複製的數目，建議至少 設置為2，一般是3，最高設置為4。更高的replication factor（假設數目為N）意味著：
 
@@ -71,7 +67,7 @@ kafka-console-consumer --bootstrap-server broker:9092 \
 以3為起始（當然至少需要有3個brokers，同時也不建議一個Kafka 集群中節點數少於3個節點）
 如果replication 性能成為了瓶頸或是一個issue，則建議使用一個性能更好的broker，而不是降低RF的數目
 
-##### Replication Factor 在 prod環境中起始值，請勿少於3
+#### Replication Factor 在 prod環境中起始值，請勿少於3
 
 慎用，得考慮資料的增長速度，避免儲存資料量太大，造成空間不足
 
