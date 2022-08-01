@@ -1,4 +1,4 @@
-package nsqtool
+package nsqtool_test
 
 import (
 	"log"
@@ -8,22 +8,23 @@ import (
 	"testing"
 
 	gotool "github.com/adimax2953/go-tool"
+	"github.com/adimax2953/go-tool/nsqtool"
 	logtool "github.com/adimax2953/log-tool"
 	"github.com/nsqio/go-nsq"
 )
 
 func Test_SendtoNSQ(t *testing.T) {
 
-	nsqConfig := &NsqConfig{
+	nsqConfig := &nsqtool.NsqConfig{
 		Lookups: []string{"192.168.56.1:4161"},
 		NSQDs:   []string{"192.168.56.1:4150"},
 		NSQD:    "192.168.56.1:4150",
 	}
 
-	go InitializeConsumer(nsqConfig, "test", "", NsqunPackTest)
-	InitializePublisher(nsqConfig)
+	go nsqtool.InitializeConsumer(nsqConfig, "test", "", NsqunPackTest)
+	nsqtool.InitializePublisher(nsqConfig)
 
-	Send("test", []byte("test山豬"))
+	nsqtool.Send("test", []byte("test山豬"))
 
 	// Graceful shutdown -
 	ch := make(chan os.Signal, 1)
