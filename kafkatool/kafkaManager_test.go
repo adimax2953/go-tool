@@ -14,8 +14,10 @@ func Test_SendtoKafka(t *testing.T) {
 		NumPartition:      1,
 		ReplicationFactor: 1,
 	}
-	config.CreateTopic("test111")
-	config.CreateConn("test111")
-	config.WriteMessages("test111", "one", "two", "three")
-
+	//config.CreateTopic("test1112")
+	//config.CreateConn("test1")
+	config.WriteMessages("test3", "da", "da", "der", "ma", "te", "sen")
+	//config.ReadMessages("test1")
+	config.GetTopic()
+	config.DelTopic(config.GetTopic()...)
 }
