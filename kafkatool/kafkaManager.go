@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"time"
 
+	gotool "github.com/adimax2953/go-tool"
 	logtool "github.com/adimax2953/log-tool"
 	"github.com/segmentio/kafka-go"
 	"github.com/segmentio/kafka-go/compress"
@@ -27,28 +28,6 @@ func InitializeConsumer() {
 
 func InitializePublisher() {
 
-}
-
-func (config *KafkaConfig) NewClient(topic string) {
-
-	conn, err := kafka.DialLeader(context.Background(), config.Network, config.Address, topic, config.NumPartition)
-	if err != nil {
-		logtool.LogFatal(err.Error())
-	}
-	logtool.LogInfo("Kafka NewClient ", config.Network, config.Address)
-	//defer conn.Close()
-	config.Conn = conn
-}
-func (config *KafkaConfig) WriteMessages2(topic string) {
-	w, err := config.Conn.WriteMessages(kafka.Message{
-		Topic: topic,
-		Key:   []byte("this"),
-		Value: []byte("65555")})
-	if err != nil {
-		logtool.LogError(err.Error())
-
-	}
-	logtool.LogInfo("Kafka Write ", w)
 }
 
 // CreateTopic -建立topic 1.topic 2.NumPartition 3.ReplicationFactor
@@ -156,32 +135,6 @@ func (config *KafkaConfig) GetTopic() []string {
 	return m
 }
 
-// CreateConn - 建立對Topic的連線
-func (config *KafkaConfig) CreateConn(topic string, num ...int) *kafka.Conn {
-
-	conn, err := kafka.Dial(config.Network, config.Address)
-	if err != nil {
-		logtool.LogFatal(err.Error())
-	}
-	logtool.LogInfo("Kafka CreateConn ", config.Network, config.Address)
-
-	defer conn.Close()
-
-	controller, err := conn.Controller()
-	if err != nil {
-		logtool.LogFatal(err.Error())
-	}
-
-	var connLeader *kafka.Conn
-	connLeader, err = kafka.Dial(config.Network, net.JoinHostPort(controller.Host, strconv.Itoa(controller.Port)))
-	if err != nil {
-		logtool.LogFatal(err.Error())
-	}
-	config.Conn = connLeader
-	defer connLeader.Close()
-	return config.Conn
-}
-
 // WriteMessagesKeyValue - 發送訊息到Topic
 func (config *KafkaConfig) WriteMessagesKeyValue(topic string, value map[string]string) {
 	count := len(value)
@@ -277,27 +230,25 @@ func (config *KafkaConfig) WriteMessages(topic string, value ...string) {
 func (config *KafkaConfig) ReadMessages(topic, groupid string) {
 
 	r := kafka.NewReader(kafka.ReaderConfig{
-		Brokers:  []string{config.Address},
-		GroupID:  groupid,
-		Topic:    topic,
-		MinBytes: 10e3, // 10KB
-		MaxBytes: 10e6, // 10MB
-		//CommitInterval: time.Second, // flushes commits to Kafka every second
+		Brokers:        []string{config.Address},
+		GroupID:        groupid,
+		Topic:          topic,
+		MinBytes:       10e3,        // 10KB
+		MaxBytes:       10e6,        // 10MB
+		CommitInterval: time.Second, // flushes commits to Kafka every second
 	})
 
-	go func() {
-		time.Sleep(1 * time.Second)
-
-		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-		defer cancel()
-		for {
-			m, err := r.ReadMessage(ctx)
-			if err != nil {
-				break
-			}
-			logtool.LogInfo("message at", string(m.Value))
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	i := 0
+	for {
+		m, err := r.ReadMessage(ctx)
+		if err != nil {
+			break
 		}
-	}()
+		logtool.LogInfo("message at", gotool.IntToStr(i), string(m.Value))
+		i++
+	}
 
 	if err := r.Close(); err != nil {
 		logtool.LogError("failed to close reader:", err)
