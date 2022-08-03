@@ -100,6 +100,7 @@ kafka-console-consumer --bootstrap-server broker:9092 \
 
 
 ## How to Use
+```go
 <!-- 建立Topic及其Partition數量 -->
 	config.CreateTopic("test1", 10)
 
@@ -120,3 +121,5 @@ kafka-console-consumer --bootstrap-server broker:9092 \
 	 	m[gotool.IntToStr(i)+"@player"] = "value " + gotool.IntToStr(i)
 	 }
 	 config.WriteMessagesKeyValue("test1", m)
+```	 
+	 
