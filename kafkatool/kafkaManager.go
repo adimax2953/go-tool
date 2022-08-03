@@ -9,6 +9,7 @@ import (
 
 	logtool "github.com/adimax2953/log-tool"
 	"github.com/segmentio/kafka-go"
+	"github.com/segmentio/kafka-go/compress"
 )
 
 // KafkaConfig - Represents a Configuration
@@ -17,7 +18,7 @@ type KafkaConfig struct {
 	Address           string `yaml:"adress"`
 	NumPartition      int    `yaml:"numPartition"`
 	ReplicationFactor int    `yaml:"replicationFactor"`
-	Client            *kafka.Conn
+	Conn              *kafka.Conn
 }
 
 func InitializeConsumer() {
@@ -26,6 +27,28 @@ func InitializeConsumer() {
 
 func InitializePublisher() {
 
+}
+
+func (config *KafkaConfig) NewClient(topic string) {
+
+	conn, err := kafka.DialLeader(context.Background(), config.Network, config.Address, topic, config.NumPartition)
+	if err != nil {
+		logtool.LogFatal(err.Error())
+	}
+	logtool.LogInfo("Kafka NewClient ", config.Network, config.Address)
+	//defer conn.Close()
+	config.Conn = conn
+}
+func (config *KafkaConfig) WriteMessages2(topic string) {
+	w, err := config.Conn.WriteMessages(kafka.Message{
+		Topic: topic,
+		Key:   []byte("this"),
+		Value: []byte("65555")})
+	if err != nil {
+		logtool.LogError(err.Error())
+
+	}
+	logtool.LogInfo("Kafka Write ", w)
 }
 
 // CreateTopic -建立topic 1.topic 2.NumPartition 3.ReplicationFactor
@@ -43,7 +66,7 @@ func (config *KafkaConfig) CreateTopic(topic string, num ...int) {
 
 	conn, err := kafka.Dial(config.Network, config.Address)
 	if err != nil {
-		logtool.LogFatal("CreateTopic0", err.Error())
+		logtool.LogFatal("CreateTopic Dial Error", err.Error())
 	}
 	defer conn.Close()
 
@@ -71,7 +94,7 @@ func (config *KafkaConfig) CreateTopic(topic string, num ...int) {
 	if err != nil {
 		logtool.LogFatal(err.Error())
 	}
-	config.Client = controllerConn
+	config.Conn = controllerConn
 
 	logtool.LogInfo("Kafka CreateTopic ", topic)
 }
@@ -83,7 +106,6 @@ func (config *KafkaConfig) DelTopic(topic ...string) {
 	if err != nil {
 		logtool.LogFatal(err.Error())
 	}
-	logtool.LogInfo("Kafka DelTopic ", config.Network, config.Address)
 	defer conn.Close()
 
 	controller, err := conn.Controller()
@@ -101,6 +123,8 @@ func (config *KafkaConfig) DelTopic(topic ...string) {
 	if err := conn.DeleteTopics(topic...); err != nil {
 		logtool.LogError("DelTopic Delete Error ", err)
 	}
+	logtool.LogInfo("Kafka DelTopic ", topic)
+
 }
 
 // GetTopic - 取得Topic的列表
@@ -110,7 +134,6 @@ func (config *KafkaConfig) GetTopic() []string {
 	if err != nil {
 		logtool.LogFatal(err.Error())
 	}
-	logtool.LogInfo("Kafka GetTopic ", config.Network, config.Address)
 
 	defer conn.Close()
 
@@ -128,6 +151,7 @@ func (config *KafkaConfig) GetTopic() []string {
 	for _, v := range m {
 		logtool.LogInfo(v)
 	}
+	logtool.LogInfo("Kafka GetTopic ", m)
 
 	return m
 }
@@ -153,15 +177,16 @@ func (config *KafkaConfig) CreateConn(topic string, num ...int) *kafka.Conn {
 	if err != nil {
 		logtool.LogFatal(err.Error())
 	}
-	config.Client = connLeader
+	config.Conn = connLeader
 	defer connLeader.Close()
-	return config.Client
+	return config.Conn
 }
 
-// WriteMessages - 發送訊息到Topic
-func (config *KafkaConfig) WriteMessages(topic string, value ...string) {
+// WriteMessagesKeyValue - 發送訊息到Topic
+func (config *KafkaConfig) WriteMessagesKeyValue(topic string, value map[string]string) {
 	count := len(value)
 	if count == 0 {
+		logtool.LogError("WriteMessagesKeyValue value is nil")
 		return
 	}
 	mlist := make([]kafka.Message, count)
@@ -171,25 +196,74 @@ func (config *KafkaConfig) WriteMessages(topic string, value ...string) {
 		Topic:                  topic,
 		AllowAutoTopicCreation: true,
 		Balancer:               &kafka.LeastBytes{},
+		RequiredAcks:           1,
+		BatchSize:              1048576,
+		Compression:            compress.None,
 	}
-
+	sum := 0
 	for k, v := range value {
-		mlist[k] = kafka.Message{Value: []byte(v)}
+		mlist[sum] = kafka.Message{
+			Key:   []byte(k),
+			Value: []byte(v)}
+		sum++
 	}
 
 	var err error
-	const retries = 3
+	const retries = 1
 	for i := 0; i < retries; i++ {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
 
-		err = w.WriteMessages(ctx, mlist...)
-		if errors.Is(err, kafka.LeaderNotAvailable) || errors.Is(err, context.DeadlineExceeded) {
-			time.Sleep(time.Millisecond * 250)
-			continue
+		if err = w.WriteMessages(ctx, mlist...); err != nil {
+			if errors.Is(err, kafka.LeaderNotAvailable) || errors.Is(err, context.DeadlineExceeded) {
+				time.Sleep(time.Millisecond * 100)
+				continue
+			}
+			logtool.LogError("WriteMessages unexpected error %v", err)
 		}
-		if err != nil {
-			logtool.LogError("unexpected error %v", err)
+	}
+
+	if err := w.Close(); err != nil {
+		logtool.LogError("failed to close writer:", err)
+	}
+	logtool.LogInfo("Kafka WriteMessages ", mlist)
+}
+
+// WriteMessages - 發送訊息到Topic
+func (config *KafkaConfig) WriteMessages(topic string, value ...string) {
+	count := len(value)
+	if count == 0 {
+		logtool.LogError("WriteMessages value is nil")
+		return
+	}
+	mlist := make([]kafka.Message, count)
+
+	w := &kafka.Writer{
+		Addr:                   kafka.TCP(config.Address),
+		Topic:                  topic,
+		AllowAutoTopicCreation: true,
+		Balancer:               &kafka.LeastBytes{},
+		RequiredAcks:           1,
+	}
+
+	for k, v := range value {
+		mlist[k] = kafka.Message{
+			Key:   []byte(v),
+			Value: []byte(v)}
+	}
+
+	var err error
+	const retries = 1
+	for i := 0; i < retries; i++ {
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+
+		if err = w.WriteMessages(ctx, mlist...); err != nil {
+			if errors.Is(err, kafka.LeaderNotAvailable) || errors.Is(err, context.DeadlineExceeded) {
+				time.Sleep(time.Millisecond * 250)
+				continue
+			}
+			logtool.LogError("WriteMessages unexpected error %v", err)
 		}
 	}
 
@@ -200,10 +274,11 @@ func (config *KafkaConfig) WriteMessages(topic string, value ...string) {
 }
 
 // ReadMessages - 接收Topic的訊息
-func (config *KafkaConfig) ReadMessages(topic string) {
+func (config *KafkaConfig) ReadMessages(topic, groupid string) {
 
 	r := kafka.NewReader(kafka.ReaderConfig{
 		Brokers:  []string{config.Address},
+		GroupID:  groupid,
 		Topic:    topic,
 		MinBytes: 10e3, // 10KB
 		MaxBytes: 10e6, // 10MB

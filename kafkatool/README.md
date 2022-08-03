@@ -16,7 +16,6 @@ docker-compose exec broker \
 kakfa-topic.sh --list topic topicName --zookeeper zookeeper.servers.list
 
 
-
 對topic發送消息
 docker-compose exec --interactive --tty broker \
 kafka-console-producer --bootstrap-server broker:9092 \
@@ -101,7 +100,23 @@ kafka-console-consumer --bootstrap-server broker:9092 \
 
 
 ## How to Use
+<!-- 建立Topic及其Partition數量 -->
+	config.CreateTopic("test1", 10)
 
+<!-- 一次寫入一大批僅有value的資料 -->
+1.
+	s := make([]string, 10000)
+	for i := 0; i < 10000; i++ {
+		s[i] = "value " + gotool.IntToStr(i)
+	}
+	config.WriteMessages("test3", s...)
 
+2.
+    config.WriteMessages("test3", "da", "da", "der", "ma", "te", "sen")
 
-
+<!-- 一次寫入一大批的帶著key&Value資料 -->
+	 m := map[string]string{}
+	 for i := 0; i < 10000; i++ {
+	 	m[gotool.IntToStr(i)+"@player"] = "value " + gotool.IntToStr(i)
+	 }
+	 config.WriteMessagesKeyValue("test1", m)
