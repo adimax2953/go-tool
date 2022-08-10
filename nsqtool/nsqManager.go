@@ -73,7 +73,7 @@ func InitializeConsumer(nsqconfig *NsqConfig, topic, channel string, back func(m
 	}()
 
 	// start listening
-	LogTool.LogInfo("NSQ consumer started: %v", topic)
+	LogTool.LogInfo("NSQ consumer started topic ", topic)
 	<-c.StopChan
 }
 

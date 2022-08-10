@@ -6,7 +6,7 @@ import (
 
 	gotool "github.com/adimax2953/go-tool"
 	LogTool "github.com/adimax2953/log-tool"
-	logType "github.com/adimax2953/log-tool/LogType"
+	logType "github.com/adimax2953/log-tool/logType"
 )
 
 func Test_SendtoTG(t *testing.T) {

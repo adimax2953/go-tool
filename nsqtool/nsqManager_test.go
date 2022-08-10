@@ -16,9 +16,10 @@ import (
 func Test_SendtoNSQ(t *testing.T) {
 
 	nsqConfig := &nsqtool.NsqConfig{
-		Lookups: []string{"192.168.56.1:4161"},
-		NSQDs:   []string{"192.168.56.1:4150"},
-		NSQD:    "192.168.56.1:4150",
+		Lookups: []string{"192.168.10.184:4161", "192.168.10.185:4161"},
+		NSQDs:   []string{"192.168.10.184:4150", "192.168.10.185:4150"},
+		NSQD:    "192.168.10.184:4150",
+		//NSQD:    "192.168.10.185:4150",
 	}
 
 	go nsqtool.InitializeConsumer(nsqConfig, "test", "", NsqunPackTest)

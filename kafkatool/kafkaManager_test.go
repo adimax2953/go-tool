@@ -17,26 +17,43 @@ func Test_SendtoKafka(t *testing.T) {
 		NumPartition:      0,
 		ReplicationFactor: 1,
 	}
-	config.CreateTopic("test3", 10)
+	config.CreateTopic("test05", 10)
 	c = *config
-	// m := map[string]string{}
-	// for i := 0; i < 10000; i++ {
-	// 	m[gotool.IntToStr(i)+"@player"] = "value " + gotool.IntToStr(i)
-	// }
-	// config.WriteMessagesKeyValue("test3", m)
-	//config.ReadMessages("test3", "1")
+
+	m := map[string]string{}
+	for i := 0; i < 10000; i++ {
+		m["1@player"] = "value " + gotool.IntToStr(i)
+		config.WriteMessagesKeyValue("test05", m)
+	}
+	m2 := map[string]string{}
+
+	for i := 0; i < 33; i++ {
+		m2["2@player"] = "value " + gotool.IntToStr(i)
+		config.WriteMessagesKeyValue("test05", m2)
+	}
+	m3 := map[string]string{}
+	for i := 0; i < 33; i++ {
+		m3["3@player"] = "value " + gotool.IntToStr(i)
+		config.WriteMessagesKeyValue("test05", m3)
+	}
+
+	//config.WriteMessagesKeyValue("test03", m)
+
+	//config.ReadMessages("test02", "1")
 
 	//config.GetTopic()
 	//config.DelTopic(config.GetTopic()...)
-	wp := gotool.NewWorkPool(1)
-	p, _ := wp.NewWorkPoolWithFunc(100, func(i interface{}) {
-		test(i)
-	})
-	for i := 0; i < 10000; i++ {
-		p.Invoke(i)
-	}
-	defer wp.Release()
-	defer p.Release()
+
+	//用workpool的測試
+	// wp := gotool.NewWorkPool(1)
+	// p, _ := wp.NewWorkPoolWithFunc(100, func(i interface{}) {
+	// 	test(i)
+	// })
+	// for i := 0; i < 10000; i++ {
+	// 	p.Invoke(i)
+	// }
+	// defer wp.Release()
+	// defer p.Release()
 
 	// s := make([]string, 10000)
 	// for i := 0; i < 10000; i++ {
