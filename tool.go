@@ -33,3 +33,20 @@ func RecoverPanic() {
 		return
 	}
 }
+
+/*
+// 取亂數 1~num
+func Base64Increment(s string) string {
+
+	chars := "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+	var lastChar = rune(s[:len(s)-1])
+	fragment := s[0 : len(s)-1]
+
+	if strings.IndexRune(chars, lastChar) < 35 {
+		lastChar = chars[:strings.IndexRune(chars, lastChar)+1]
+		return fragment + lastChar
+	}
+	return Base64Increment(fragment) + "0"
+}
+*/

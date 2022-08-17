@@ -19,7 +19,7 @@ func Test_WorkPool(t *testing.T) {
 		test2(i)
 	})
 	for i := 0; i < runTimes; i++ {
-		_ = p.Invoke(int32(i))
+		_ = p.Invoke(int(i))
 	}
 	defer p.Release()
 	defer wp.Release()
@@ -27,6 +27,9 @@ func Test_WorkPool(t *testing.T) {
 func test() {
 	LogTool.LogInfo("Hello World!")
 }
+
+var str string = "00000ZZZ"
+
 func test2(i interface{}) {
-	LogTool.LogInfo("Hello World!", i)
+	//LogTool.LogInfo("Hello World!", gotool.Base64Increment(str))
 }

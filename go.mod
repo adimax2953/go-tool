@@ -3,7 +3,7 @@ module github.com/adimax2953/go-tool
 go 1.18
 
 require (
-	github.com/adimax2953/log-tool v0.0.1
+	github.com/adimax2953/log-tool v0.0.5
 	github.com/nsqio/go-nsq v1.1.0
 	github.com/panjf2000/ants/v2 v2.5.0
 	github.com/robfig/cron v1.2.0

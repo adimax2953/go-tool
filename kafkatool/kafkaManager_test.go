@@ -12,7 +12,7 @@ var c kafkatool.KafkaConfig
 func Test_SendtoKafka(t *testing.T) {
 
 	config := &kafkatool.KafkaConfig{
-		Address:           "192.168.56.1:9092",
+		Address:           "192.168.10.151:9091",
 		Network:           "tcp",
 		NumPartition:      0,
 		ReplicationFactor: 1,
