@@ -8,13 +8,15 @@ import (
 )
 
 func Test_WorkPool(t *testing.T) {
+
+	for i := 0; i < 1; i++ {
+		test2(i)
+	}
+
+	return
+
 	runTimes := 1000000
-
 	wp := gotool.NewWorkPool(runTimes)
-	// for i := 0; i < runTimes; i++ {
-	// 	wp.SubmitTask(test)
-	// }
-
 	p, _ := wp.NewWorkPoolWithFunc(runTimes, func(i interface{}) {
 		test2(i)
 	})
@@ -28,8 +30,9 @@ func test() {
 	LogTool.LogInfo("Hello World!")
 }
 
-var str string = "00000ZZZ"
+var str string = "z"
 
 func test2(i interface{}) {
-	//LogTool.LogInfo("Hello World!", gotool.Base64Increment(str))
+	str = gotool.Base62Increment(str)
+	LogTool.LogDebug(str)
 }

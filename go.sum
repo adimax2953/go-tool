@@ -1,5 +1,3 @@
-github.com/adimax2953/log-tool v0.0.1 h1:A65TC1VmXn8S0f2zmQNf+jJUBngt+Rb6SQgWQn9yBwk=
-github.com/adimax2953/log-tool v0.0.1/go.mod h1:XgH/D0Ujfr5LBJNh2PJVkC0qdwICd0OHiv2BY9ry8+s=
 github.com/adimax2953/log-tool v0.0.5 h1:0bdM/8ux9KPlYctD5oplfVpMXSZZ+6jbw8jZMWdsFzI=
 github.com/adimax2953/log-tool v0.0.5/go.mod h1:JYNI5uJday1RFVhRDHauqgudBLpKuEFshzMHXZdTFJI=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

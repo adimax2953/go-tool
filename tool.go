@@ -3,6 +3,7 @@ package gotool
 import (
 	"math/rand"
 	"runtime/debug"
+	"strings"
 
 	LogTool "github.com/adimax2953/log-tool"
 )
@@ -34,19 +35,22 @@ func RecoverPanic() {
 	}
 }
 
-/*
-// 取亂數 1~num
-func Base64Increment(s string) string {
+// 遞增字符串ByBase62
+func Base62Increment(s string) string {
+	defer RecoverPanic()
+	chars := "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 
-	chars := "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-
-	var lastChar = rune(s[:len(s)-1])
-	fragment := s[0 : len(s)-1]
-
-	if strings.IndexRune(chars, lastChar) < 35 {
-		lastChar = chars[:strings.IndexRune(chars, lastChar)+1]
-		return fragment + lastChar
+	var firstChar = s[0]
+	if strings.Index(chars, string(firstChar)) == 61 {
+		return Base62Increment("0" + s)
 	}
-	return Base64Increment(fragment) + "0"
+
+	var lastChar = s[len(s)-1]
+	fragment := s[0 : len(s)-1]
+	if strings.Index(chars, string(lastChar)) < 61 {
+		lastChar = chars[strings.Index(chars, string(lastChar))+1]
+		return fragment + string(lastChar)
+	}
+
+	return Base62Increment(fragment) + "0"
 }
-*/
