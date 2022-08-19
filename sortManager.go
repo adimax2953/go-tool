@@ -43,6 +43,7 @@ func division(list []int32, left int32, right int32) int32 {
 	return left
 }
 
+//region 快速排序
 func QuickSort(list []int32, left int32, right int32) {
 	// 左下標一定小於右下標, 否則就越界了
 	if left < right {
