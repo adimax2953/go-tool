@@ -135,6 +135,58 @@ func (config *KafkaConfig) GetTopic() []string {
 	return m
 }
 
+type KafkaMsg struct {
+	Key   string
+	Value string
+}
+
+// WriteMessagesKeyValueList - 發送訊息到Topic
+func (config *KafkaConfig) WriteMessagesKeyValueList(topic string, value []KafkaMsg) {
+	count := len(value)
+	if count == 0 {
+		logtool.LogError("WriteMessagesKeyValueList value is nil")
+		return
+	}
+	mlist := make([]kafka.Message, count)
+
+	w := &kafka.Writer{
+		Addr:                   kafka.TCP(config.Address),
+		Topic:                  topic,
+		AllowAutoTopicCreation: true,
+		Balancer:               &kafka.LeastBytes{},
+		RequiredAcks:           1,
+		BatchSize:              1048576,
+		Compression:            compress.None,
+	}
+	sum := 0
+	for _, mv := range value {
+		mlist[sum] = kafka.Message{
+			Key:   []byte(mv.Key),
+			Value: []byte(mv.Value)}
+		sum++
+	}
+
+	var err error
+	const retries = 1
+	for i := 0; i < retries; i++ {
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+
+		if err = w.WriteMessages(ctx, mlist...); err != nil {
+			if errors.Is(err, kafka.LeaderNotAvailable) || errors.Is(err, context.DeadlineExceeded) {
+				time.Sleep(time.Millisecond * 100)
+				continue
+			}
+			logtool.LogError("WriteMessages unexpected error %v", err)
+		}
+	}
+
+	if err := w.Close(); err != nil {
+		logtool.LogError("failed to close writer:", err)
+	}
+	//logtool.LogInfo("Kafka WriteMessages ", mlist)
+}
+
 // WriteMessagesKeyValue - 發送訊息到Topic
 func (config *KafkaConfig) WriteMessagesKeyValue(topic string, value map[string]string) {
 	count := len(value)

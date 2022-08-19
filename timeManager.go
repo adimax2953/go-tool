@@ -41,20 +41,41 @@ func TimeNowStr() string {
 	return timeStr
 }
 
-//  轉化成"2006-01-02 15:04:05"的時間模版
+//	轉化成"2006-01-02 15:04:05"的時間模版
+//
 // 輸入為time.Now().Unix()
-func TimeFormatDate(timestamp int64) string {
+func TimeStamptoDateTime(timestamp int64) string {
 	//timestamp := time.Now().Unix()
 	datetime := time.Unix(timestamp, 0).Format(DateTimeLayout)
 	return datetime
 }
 
-// 現在時間 格式為""2006-01-02""
+// 現在時間 格式為"2006-01-02"
 func DateFromNow() string {
 	return time.Now().Format(DateLayout)
+}
+
+// 現在時間 格式為"15:04:05"
+func TimeFromNow() string {
+	return time.Now().Format(TimeLayout)
+}
+
+// 現在時間 格式為"2006-01-02 15:04:05"
+func DateTimeFromNow() string {
+	return time.Now().Format(DateTimeLayout)
 }
 
 // 透過time.Now().Unix()出來的秒數轉為 "2006-01-02"
 func DateFromTimeStamp(timestamp int64) string {
 	return time.Unix(timestamp, 0).Format(DateLayout)
+}
+
+// 透過time.Now().Unix()出來的秒數轉為 "15:04:05"
+func TimeFromTimeStamp(timestamp int64) string {
+	return time.Unix(timestamp, 0).Format(TimeLayout)
+}
+
+// 透過time.Now().Unix()出來的秒數轉為 "2006-01-02" "15:04:05"
+func DateTimeFromTimeStamp(timestamp int64) (string, string) {
+	return time.Unix(timestamp, 0).Format(DateLayout), time.Unix(timestamp, 0).Format(TimeLayout)
 }
