@@ -22,6 +22,11 @@ type KafkaConfig struct {
 	Conn              *kafka.Conn
 }
 
+type WriteData struct {
+	Key   string
+	Value string
+}
+
 func InitializeConsumer() {
 
 }
@@ -135,13 +140,8 @@ func (config *KafkaConfig) GetTopic() []string {
 	return m
 }
 
-type KafkaMsg struct {
-	Key   string
-	Value string
-}
-
 // WriteMessagesKeyValueList - 發送訊息到Topic
-func (config *KafkaConfig) WriteMessagesKeyValueList(topic string, value []KafkaMsg) {
+func (config *KafkaConfig) WriteMessagesKeyValueList(topic string, value []WriteData) {
 	count := len(value)
 	if count == 0 {
 		logtool.LogError("WriteMessagesKeyValueList value is nil")

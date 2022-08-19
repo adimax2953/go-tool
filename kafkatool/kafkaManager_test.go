@@ -7,6 +7,7 @@ import (
 
 	gotool "github.com/adimax2953/go-tool"
 	"github.com/adimax2953/go-tool/kafkatool"
+	LogTool "github.com/adimax2953/log-tool"
 	"github.com/shopspring/decimal"
 )
 
@@ -20,11 +21,11 @@ func Test_SendtoKafka(t *testing.T) {
 		NumPartition:      0,
 		ReplicationFactor: 1,
 	}
-	config.CreateTopic("test-USS-Game", 10)
+	config.CreateTopic("USS-Game", 10)
 	c = *config
 	count := 100000
 
-	mlist := make([]kafkatool.KafkaMsg, count)
+	mlist := make([]kafkatool.WriteData, count)
 	for i := 0; i < count; i++ {
 		t := time.Now().Unix()
 		d, h := gotool.DateTimeFromTimeStamp(t)
@@ -33,12 +34,12 @@ func Test_SendtoKafka(t *testing.T) {
 		var bonus int64 = 30000
 		quantity := decimal.NewFromInt(bonus).Mul(decimal.NewFromFloat(0.04))
 		var fee int64 = gotool.Str2int64(quantity.String())
-		var value int64 = 40000 - fee
+		var value int64 = 10000 + bonus - fee
 
 		gamebet := &GameBetResult{
 			TransactionID:   gotool.Base62Increment(trandID),
 			RoundID:         gotool.Base62Increment(roundID),
-			TransactionType: "bet",
+			TransactionType: "refund",
 			GameCode:        "THUSS",
 			BetID:           1,
 			Country:         "CDN",
@@ -54,7 +55,7 @@ func Test_SendtoKafka(t *testing.T) {
 			Bonus:           bonus,
 			Fee:             fee,
 			Country:         "THD",
-			TransactionType: "win",
+			TransactionType: "refund",
 			PlayerName:      "15656561",
 			SiteCode:        "TG",
 			Platform:        "UFA",
@@ -67,14 +68,14 @@ func Test_SendtoKafka(t *testing.T) {
 		jsonBytes, err := json.Marshal(gamelog)
 		if err != nil {
 		}
-		m := &kafkatool.KafkaMsg{
+		m := &kafkatool.WriteData{
 			Key:   gamelog.SiteCode,
 			Value: string(jsonBytes),
 		}
 		mlist[i] = *m
 	}
-	c.WriteMessagesKeyValueList("test-USS-Game", mlist)
-	//LogTool.LogDebug("", mlist)
+	c.WriteMessagesKeyValueList("USS-Game", mlist)
+	LogTool.LogDebug("", roundID)
 
 	//config.WriteMessagesKeyValue("test-USS-Game", m)
 
@@ -138,5 +139,5 @@ type GameResult struct {
 	Lottery       int    `json:"lottery"`
 }
 
-var roundID string = "00000000Q0v"
-var trandID string = "00000000Q0v"
+var roundID string = "00000001G2j"
+var trandID string = "00000001G2j"
