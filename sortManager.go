@@ -54,5 +54,4 @@ func QuickSort(list []int32, left int32, right int32) {
 		//對“基準標號“右側的一組數值進行遞歸的切割, 以至於將這些數值完整的排序
 		QuickSort(list, base+1, right)
 	}
-
 }

@@ -13,25 +13,30 @@ import (
 
 var c kafkatool.KafkaConfig
 
+var roundID string = "0000000264W"
+var trandID string = "0000000264W"
+
 func Test_SendtoKafka(t *testing.T) {
 
 	config := &kafkatool.KafkaConfig{
-		Address:           "192.168.10.151:9091",
+		Address:           "192.168.10.151:9092",
 		Network:           "tcp",
 		NumPartition:      0,
 		ReplicationFactor: 1,
 	}
+
 	config.CreateTopic("USS-Game", 10)
 	c = *config
 	count := 100000
 
 	mlist := make([]kafkatool.WriteData, count)
 	for i := 0; i < count; i++ {
+
 		t := time.Now().Unix()
 		d, h := gotool.DateTimeFromTimeStamp(t)
 		trandID = gotool.Base62Increment(trandID)
 		roundID = gotool.Base62Increment(roundID)
-		var bonus int64 = 30000
+		var bonus int64 = 0
 		quantity := decimal.NewFromInt(bonus).Mul(decimal.NewFromFloat(0.04))
 		var fee int64 = gotool.Str2int64(quantity.String())
 		var value int64 = 10000 + bonus - fee
@@ -63,6 +68,7 @@ func Test_SendtoKafka(t *testing.T) {
 			DateStr:         d,
 			TimeStr:         h,
 			IsFree:          false,
+			UIOrientation:   "vertical",
 			Timestamp:       gotool.TimeStamptoDateTime(t),
 		}
 		jsonBytes, err := json.Marshal(gamelog)
@@ -72,9 +78,13 @@ func Test_SendtoKafka(t *testing.T) {
 			Key:   gamelog.SiteCode,
 			Value: string(jsonBytes),
 		}
+		ms := map[string]string{}
+		ms["tg"] = string(jsonBytes)
+		//go c.WriteMessagesKeyValue("USS-Game", ms)
 		mlist[i] = *m
 	}
 	c.WriteMessagesKeyValueList("USS-Game", mlist)
+
 	LogTool.LogDebug("", roundID)
 
 	//config.WriteMessagesKeyValue("test-USS-Game", m)
@@ -106,6 +116,7 @@ type GameLog struct {
 	DateStr         string      `json:"dateStr"`
 	TimeStr         string      `json:"timeStr"`
 	IsFree          bool        `json:"isFree"`
+	UIOrientation   string      `json:"uiOrientation"`
 	Timestamp       string      `json:"@timestamp"`
 }
 type GameBetResult struct {
@@ -138,6 +149,3 @@ type GameResult struct {
 	TotalPL       string `json:"totalPL"`
 	Lottery       int    `json:"lottery"`
 }
-
-var roundID string = "00000001G2j"
-var trandID string = "00000001G2j"

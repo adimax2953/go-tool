@@ -153,9 +153,10 @@ func (config *KafkaConfig) WriteMessagesKeyValueList(topic string, value []Write
 		Addr:                   kafka.TCP(config.Address),
 		Topic:                  topic,
 		AllowAutoTopicCreation: true,
-		Balancer:               &kafka.LeastBytes{},
-		RequiredAcks:           1,
+		Balancer:               &kafka.Murmur2Balancer{},
+		RequiredAcks:           -1,
 		BatchSize:              1048576,
+		BatchBytes:             1048576,
 		Compression:            compress.None,
 	}
 	sum := 0
@@ -203,6 +204,7 @@ func (config *KafkaConfig) WriteMessagesKeyValue(topic string, value map[string]
 		Balancer:               &kafka.LeastBytes{},
 		RequiredAcks:           1,
 		BatchSize:              1048576,
+		BatchBytes:             1048576,
 		Compression:            compress.None,
 	}
 	sum := 0
@@ -231,7 +233,7 @@ func (config *KafkaConfig) WriteMessagesKeyValue(topic string, value map[string]
 	if err := w.Close(); err != nil {
 		logtool.LogError("failed to close writer:", err)
 	}
-	logtool.LogInfo("Kafka WriteMessages ", mlist)
+	//logtool.LogInfo("Kafka WriteMessages ", mlist)
 }
 
 // WriteMessages - 發送訊息到Topic
@@ -247,6 +249,9 @@ func (config *KafkaConfig) WriteMessages(topic string, value ...string) {
 		Addr:                   kafka.TCP(config.Address),
 		Topic:                  topic,
 		AllowAutoTopicCreation: true,
+		Compression:            compress.None,
+		BatchSize:              1048576,
+		BatchBytes:             1048576,
 		Balancer:               &kafka.LeastBytes{},
 		RequiredAcks:           1,
 	}
