@@ -28,5 +28,6 @@ func test() {
 	LogTool.LogInfo("Hello World!")
 }
 func test2(i interface{}) {
-	LogTool.LogInfo("Hello World!", i)
+	y, w := gotool.GetWeek()
+	LogTool.LogInfo("Hello", y, w)
 }

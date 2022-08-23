@@ -79,3 +79,11 @@ func TimeFromTimeStamp(timestamp int64) string {
 func DateTimeFromTimeStamp(timestamp int64) (string, string) {
 	return time.Unix(timestamp, 0).Format(DateLayout), time.Unix(timestamp, 0).Format(TimeLayout)
 }
+
+// 透過time.Now()出來的年份跟週數
+func GetWeek() (y, w int) {
+	datetime := time.Now().Format(DateLayout)
+	loc, _ := time.LoadLocation("Local")
+	tmp, _ := time.ParseInLocation(DateLayout, datetime, loc)
+	return tmp.ISOWeek()
+}
