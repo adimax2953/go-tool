@@ -14,14 +14,14 @@ func NewWorkPool(poolsize int) *WorkPool {
 	return &WorkPool{Pool: pool}
 }
 
-// NewWorkPool - 建立一個工作池 poolsize：要有多少線呈 return WorkPool
+// NewWorkPool - 建立WorkPool poolsize：要有多少線呈 return PoolWithFunc
 func (wp *WorkPool) NewWorkPoolWithFunc(poolsize int, poolfunc func(interface{})) (*ants.PoolWithFunc, error) {
 	pf, err := ants.NewPoolWithFunc(poolsize, poolfunc, ants.WithPreAlloc(true))
 	return pf, err
 }
 
-// NewWorkPool - 建立一個工作池 poolsize：要有多少線呈
-func (wp *WorkPool) changePoolSize(poolsize int) {
+// ChangePoolSize - 修改一個工作池 poolsize：要改多少線呈
+func (wp *WorkPool) ChangePoolSize(poolsize int) {
 	wp.Pool.Tune(poolsize)
 }
 
