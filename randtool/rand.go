@@ -9,12 +9,13 @@ import (
 	"sync"
 	"time"
 
+	LogTool "github.com/adimax2953/log-tool"
 	"github.com/seehuhn/mt19937"
 )
 
 var rngPool sync.Pool
 
-var mt19937rand = New(mt19937.New())
+var mt19937Rand = New(mt19937.New())
 
 func init() {
 	b := new(big.Int).SetUint64(uint64(time.Now().UTC().UnixNano() / int64(os.Getpid())))
@@ -25,15 +26,16 @@ func init() {
 	x ^= x >> 31
 	seed := int64(x)
 
-	mt19937rand.Seed(seed)
+	mt19937Rand.Seed(seed)
 	rand.Seed(seed)
+	LogTool.LogSystem("init Rng")
 }
 
 // Uint32 - returns pseudorandom uint32.
 //
 // It is safe calling this function from concurrent goroutines.
 func Uint32() uint32 {
-	return mt19937rand.Uint32()
+	return mt19937Rand.Uint32()
 }
 
 // Uint32n - safe
