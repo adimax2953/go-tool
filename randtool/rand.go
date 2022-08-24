@@ -33,16 +33,7 @@ func init() {
 //
 // It is safe calling this function from concurrent goroutines.
 func Uint32() uint32 {
-	// v := rngPool.Get()
-	// if v == nil {
-	// 	v = &RNG{}
-	// }
-	// r := v.(*RNG)
-	// x := r.Uint32()
-	// rngPool.Put(r)
-	// return x
 	return mt19937rand.Uint32()
-	// return rand.Uint32()
 }
 
 // Uint32n - safe
@@ -168,17 +159,4 @@ func Shuffle(nums []int32) []int32 {
 		nums[last], nums[idx] = nums[idx], nums[last]
 	}
 	return nums
-}
-
-// BossRange -
-var BossRange = make([]int32, 100*10000)
-
-// ShufflebossRange -
-func ShufflebossRange() {
-
-	for i := 0; i < 100*10000; i++ {
-		BossRange[i] = int32(i)
-	}
-
-	BossRange = Shuffle(BossRange)
 }
