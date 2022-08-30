@@ -3,6 +3,7 @@ package gotool_test
 import (
 	"fmt"
 	"testing"
+	"time"
 
 	gotool "github.com/adimax2953/go-tool"
 	LogTool "github.com/adimax2953/log-tool"
@@ -19,5 +20,6 @@ func Test_SendtoTG(t *testing.T) {
 
 	gotool.SendToTG(TgbotChatID, TgbotToken, msg)
 
+	LogTool.LogDebug("", time.Now().UnixMilli())
 	//}
 }

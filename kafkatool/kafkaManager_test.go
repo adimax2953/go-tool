@@ -7,7 +7,6 @@ import (
 
 	gotool "github.com/adimax2953/go-tool"
 	"github.com/adimax2953/go-tool/kafkatool"
-	LogTool "github.com/adimax2953/log-tool"
 	"github.com/shopspring/decimal"
 )
 
@@ -29,11 +28,10 @@ func Test_SendtoKafka(t *testing.T) {
 	c = *config
 	mlist, id := bet(roundID)
 	c.WriteMessagesKeyValueList("USS-Game", mlist)
-	mlist, id = bet(roundID)
+	mlist, _ = win(roundID)
 	c.WriteMessagesKeyValueList("USS-Game", mlist)
 	c.WriteMessagesKeyValueList("USS-Game", refund(id, roundID))
-
-	LogTool.LogDebug("", roundID)
+	//LogTool.LogDebug("", roundID)
 
 	//config.WriteMessagesKeyValue("test-USS-Game", m)
 
@@ -51,7 +49,7 @@ func bet(id string) ([]kafkatool.WriteData, string) {
 
 	tid := gotool.Base62Increment(id)
 	rid := gotool.Base62Increment(id)
-	count := 100000
+	count := 20
 	mlist := make([]kafkatool.WriteData, count)
 	for i := 0; i < count; i++ {
 
@@ -92,7 +90,7 @@ func bet(id string) ([]kafkatool.WriteData, string) {
 			TimeStr:         h,
 			IsFree:          false,
 			UIOrientation:   "vertical",
-			Timestamp:       gotool.TimeStamptoDateTime(t),
+			Timestamp:       time.Now().UnixMilli(),
 		}
 		jsonBytes, err := json.Marshal(gamelog)
 		if err != nil {
@@ -110,7 +108,7 @@ func bet(id string) ([]kafkatool.WriteData, string) {
 func win(id string) ([]kafkatool.WriteData, string) {
 	tid := gotool.Base62Increment(id)
 	rid := gotool.Base62Increment(id)
-	count := 100000
+	count := 20
 	mlist := make([]kafkatool.WriteData, count)
 	for i := 0; i < count; i++ {
 
@@ -131,6 +129,7 @@ func win(id string) ([]kafkatool.WriteData, string) {
 			BetID:           1,
 			Value:           value,
 			FinishTime:      t,
+			PL:              "20",
 		}
 
 		gamelog := &GameLog{
@@ -150,7 +149,7 @@ func win(id string) ([]kafkatool.WriteData, string) {
 			TimeStr:         h,
 			IsFree:          false,
 			UIOrientation:   "vertical",
-			Timestamp:       gotool.TimeStamptoDateTime(t),
+			Timestamp:       time.Now().UnixMilli(),
 		}
 		jsonBytes, err := json.Marshal(gamelog)
 		if err != nil {
@@ -170,7 +169,7 @@ func refund(id, relate string) []kafkatool.WriteData {
 	rid := gotool.Base62Increment(id)
 	rlateid := gotool.Base62Increment(relate)
 
-	count := 100000
+	count := 20
 	mlist := make([]kafkatool.WriteData, count)
 	for i := 0; i < count; i++ {
 
@@ -203,7 +202,7 @@ func refund(id, relate string) []kafkatool.WriteData {
 			TimeStr:         h,
 			IsFree:          false,
 			UIOrientation:   "vertical",
-			Timestamp:       gotool.TimeStamptoDateTime(t),
+			Timestamp:       time.Now().UnixMilli(),
 		}
 		jsonBytes, err := json.Marshal(gamelog)
 		if err != nil {
@@ -238,7 +237,7 @@ type GameLog struct {
 	TimeStr         string      `json:"timeStr"`
 	IsFree          bool        `json:"isFree"`
 	UIOrientation   string      `json:"uiOrientation"`
-	Timestamp       string      `json:"@timestamp"`
+	Timestamp       int64       `json:"@timestamp"`
 }
 type GameBetResult struct {
 	TransactionID   string `json:"transactionId"`

@@ -31,14 +31,13 @@ func Test_rand(t *testing.T) {
 	// Calculate Weight -
 	var calcWeight [NMaxHit][2]int64
 	var rtp [NMaxHit]int64 = [NMaxHit]int64{0, 100, 100, 100, 100}
-	var rtpfix [NMaxHit]int64 = [NMaxHit]int64{0, 70, 35, 17, 17}
+	var rtpfix [NMaxHit]int64 = [NMaxHit]int64{0, 1, 1, 1, 1}
 	var paytable [NMaxHit]int64 = [NMaxHit]int64{0, 50, 50, 50, 50}
 	var paytablefix [NMaxHit]int64 = [NMaxHit]int64{0, 0, 0, 0, 0}
 	var win [NMaxHit]int64 = [NMaxHit]int64{0, 0, 0, 0, 0}
 	var wintimes int64 = 0
 
 	for {
-
 		for idx := 1; idx < NMaxHit; idx++ {
 
 			calcWeight[idx][1] = int64(NEnlarge * (rtp[idx] - rtpfix[idx]) / (paytable[idx] + paytablefix[idx]) / 1)

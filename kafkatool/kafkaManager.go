@@ -201,8 +201,8 @@ func (config *KafkaConfig) WriteMessagesKeyValue(topic string, value map[string]
 		Addr:                   kafka.TCP(config.Address),
 		Topic:                  topic,
 		AllowAutoTopicCreation: true,
-		Balancer:               &kafka.LeastBytes{},
-		RequiredAcks:           1,
+		Balancer:               &kafka.Murmur2Balancer{},
+		RequiredAcks:           -1,
 		BatchSize:              1048576,
 		BatchBytes:             1048576,
 		Compression:            compress.None,
@@ -252,8 +252,8 @@ func (config *KafkaConfig) WriteMessages(topic string, value ...string) {
 		Compression:            compress.None,
 		BatchSize:              1048576,
 		BatchBytes:             1048576,
-		Balancer:               &kafka.LeastBytes{},
-		RequiredAcks:           1,
+		Balancer:               &kafka.Murmur2Balancer{},
+		RequiredAcks:           -1,
 	}
 
 	for k, v := range value {

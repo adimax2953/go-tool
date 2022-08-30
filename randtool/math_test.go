@@ -17,7 +17,7 @@ func Test_Math(t *testing.T) {
 
 	for i := 0; i < int(runtimes); i++ {
 
-		idx := randtool.Lottery([]int64{1, 100, 1, 1})
+		idx := randtool.Lottery([]int64{10000, 10000000, 10000, 10000})
 		win[idx]++
 		wintimes++
 		if wintimes == runtimes {

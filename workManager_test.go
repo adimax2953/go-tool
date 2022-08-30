@@ -29,5 +29,6 @@ func test() {
 }
 func test2(i interface{}) {
 	y, w := gotool.GetWeek()
-	LogTool.LogInfo("Hello", y, w)
+	LogTool.LogInfo("Hello", gotool.Decode62To10(gotool.Encode10To62(int64(y))), gotool.Decode62To10(gotool.Encode10To62(int64(w))))
+	LogTool.LogInfo("Hello", gotool.Encode10To62(int64(y)), gotool.Encode10To62(int64(w)))
 }
