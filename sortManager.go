@@ -55,3 +55,44 @@ func QuickSort(list []int32, left int32, right int32) {
 		QuickSort(list, base+1, right)
 	}
 }
+
+func Max(vals ...int64) int64 {
+	var max int64
+	for _, val := range vals {
+		if max == 0 || val > max {
+			max = val
+		}
+	}
+	return max
+}
+
+func Min(vals ...int64) int64 {
+	var min int64
+	for _, val := range vals {
+		if min == 0 || val <= min {
+			min = val
+		}
+	}
+	return min
+}
+
+func MaxNum(arr []int) (max int, maxIndex int) {
+	max = arr[0]
+	for i := 0; i < len(arr); i++ {
+		if max < arr[i] {
+			max = arr[i]
+			maxIndex = i
+		}
+	}
+	return max, maxIndex
+}
+func MinNum(arr []int) (min int, minIndex int) {
+	min = arr[0]
+	for index, val := range arr {
+		if min > val {
+			min = val
+			minIndex = index
+		}
+	}
+	return min, minIndex
+}
