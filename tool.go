@@ -1,27 +1,17 @@
 package gotool
 
 import (
+	"bytes"
+	"compress/gzip"
+	"encoding/base64"
 	"math"
-	"math/rand"
 	"runtime/debug"
 	"strings"
 
 	LogTool "github.com/adimax2953/log-tool"
+	"golang.org/x/text/encoding/charmap"
+	"golang.org/x/text/encoding/simplifiedchinese"
 )
-
-// 取亂數 1~num
-func RanInt(num int) int {
-	if num < 0 {
-		LogTool.LogDebug("傳入了負數 %d", num)
-		return 0
-	}
-
-	if num == 0 {
-		num++
-	}
-	rndInt := rand.Intn(num) + 1
-	return rndInt
-}
 
 func RecoverPanic() {
 	e := recover()
@@ -55,6 +45,35 @@ func Base62Increment(s string) string {
 	}
 
 	return Base62Increment(fragment) + "0"
+}
+
+func Compress(s string) string {
+	//使用GBK字符集encode
+	gbk, err := simplifiedchinese.GBK.NewEncoder().Bytes([]byte(s))
+	if err != nil {
+		//logrus.Error(err)
+		return ""
+	}
+
+	//轉為ISO8859_1，也就是latin1字串集
+	latin1, err := charmap.ISO8859_1.NewDecoder().Bytes(gbk)
+	if err != nil {
+		return ""
+	}
+
+	//使用gzip壓縮
+	var buf bytes.Buffer
+	zw := gzip.NewWriter(&buf)
+
+	_, err = zw.Write(latin1)
+	if err != nil {
+	}
+
+	if err := zw.Close(); err != nil {
+	}
+
+	//使用base64編碼
+	return base64.StdEncoding.EncodeToString(buf.Bytes())
 }
 
 // Encode10To62 - 10進制轉 62

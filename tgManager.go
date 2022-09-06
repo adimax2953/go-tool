@@ -10,8 +10,6 @@ import (
 	LogTool "github.com/adimax2953/log-tool"
 )
 
-
-
 // SendTextToTelegramChat -發送訊息到TelegramChat
 func SendTextToTelegramChat(chatId int, text string, Token string) (string, error) {
 
@@ -41,9 +39,9 @@ func SendTextToTelegramChat(chatId int, text string, Token string) (string, erro
 	return bodyString, nil
 }
 
-func SendToTG(TgbotChatID int,TgbotToken,reson  string) {
-	msg := fmt.Sprintf("\nXXX遊戲服務器\n環境："+"Prod"+"\n發生時間：" + TimeNowStr()  +"\n版本號：" + "")
-	msg+=reson
+func SendToTG(TgbotChatID int, TgbotToken, env, reson string) {
+	msg := fmt.Sprintf("\nXXX遊戲服務器\n環境：" + env + "\n發生時間：" + TimeNowStr() + "\n版本號：" + "")
+	msg += reson
 	LogTool.LogSystem(msg)
 	SendTextToTelegramChat(TgbotChatID, msg, TgbotToken)
 }

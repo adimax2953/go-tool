@@ -18,7 +18,7 @@ func Test_SendtoTG(t *testing.T) {
 	//for true {
 	LogTool.LogDebug("山豬開工了阿")
 
-	gotool.SendToTG(TgbotChatID, TgbotToken, msg)
+	gotool.SendToTG(TgbotChatID, TgbotToken, "Prod", msg)
 
 	LogTool.LogDebug("", time.Now().UnixMilli())
 	//}

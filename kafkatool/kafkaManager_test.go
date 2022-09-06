@@ -2,18 +2,20 @@ package kafkatool_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"testing"
 	"time"
 
 	gotool "github.com/adimax2953/go-tool"
 	"github.com/adimax2953/go-tool/kafkatool"
+	"github.com/adimax2953/go-tool/randtool"
 	"github.com/shopspring/decimal"
 )
 
 var c kafkatool.KafkaConfig
 
-var roundID string = "00000000000"
-var trandID string = "00000000000"
+var roundID string = "0000000000"
+var trandID string = "0000000000"
 
 func Test_SendtoKafka(t *testing.T) {
 
@@ -23,12 +25,14 @@ func Test_SendtoKafka(t *testing.T) {
 		NumPartition:      0,
 		ReplicationFactor: 1,
 	}
-
 	config.CreateTopic("USS-Game", 10)
 	c = *config
+	y, w := gotool.GetWeek()
+	roundID = fmt.Sprintf("%s%s%06d", gotool.Encode10To62(int64(y))+gotool.Encode10To62(int64(w)), "01", 0)
+
 	mlist, id := bet(roundID)
 	c.WriteMessagesKeyValueList("USS-Game", mlist)
-	mlist, _ = win(roundID)
+	mlist, id = win(id)
 	c.WriteMessagesKeyValueList("USS-Game", mlist)
 	c.WriteMessagesKeyValueList("USS-Game", refund(id, roundID))
 	//LogTool.LogDebug("", roundID)
@@ -39,10 +43,6 @@ func Test_SendtoKafka(t *testing.T) {
 	//config.ReadMessages("test02", "1")
 	//config.GetTopic()
 	//config.DelTopic(config.GetTopic()...)
-
-	//config.CreateTopic("test1112")
-	//config.CreateConn("test12")
-	//config.WriteMessages("test3", "da", "da", "der", "ma", "te", "sen")
 }
 
 func bet(id string) ([]kafkatool.WriteData, string) {
@@ -55,28 +55,28 @@ func bet(id string) ([]kafkatool.WriteData, string) {
 
 		t := time.Now().Unix()
 		d, h := gotool.DateTimeFromTimeStamp(t)
-		tid = gotool.Base62Increment(tid)
-		rid = gotool.Base62Increment(rid)
+		tid = gotool.Base62Increment(tid) + gotool.Encode10To62(int64(randtool.GetRandom(62)))
+		rid = gotool.Base62Increment(rid) + gotool.Encode10To62(int64(randtool.GetRandom(62)))
+
 		var bonus int64 = 0
 		quantity := decimal.NewFromInt(bonus).Mul(decimal.NewFromFloat(0.04))
 		var fee int64 = gotool.Str2int64(quantity.String())
 		var value int64 = 10000 + bonus - fee
 
-		gamebet := &GameBetResult{
-			TransactionID:   tid,
-			RoundID:         rid,
-			TransactionType: "bet",
-			GameCode:        "THUSS",
-			BetID:           1,
-			Country:         "CDN",
-			Value:           value,
-			FinishTime:      t,
-		}
+		gamebet := &[]GameBetResult{{
+			BetID:      1,
+			Value:      value,
+			FinishTime: t,
+		}, {
+			BetID:      2,
+			Value:      value,
+			FinishTime: t,
+		}}
 
 		gamelog := &GameLog{
 			TransactionID:   tid,
 			RoundID:         rid,
-			GameCode:        "THUSS",
+			GameCode:        "01",
 			Value:           value,
 			Bonus:           bonus,
 			Fee:             fee,
@@ -106,8 +106,8 @@ func bet(id string) ([]kafkatool.WriteData, string) {
 	return mlist, tid
 }
 func win(id string) ([]kafkatool.WriteData, string) {
-	tid := gotool.Base62Increment(id)
-	rid := gotool.Base62Increment(id)
+	tid := gotool.Base62Increment(id) + gotool.Encode10To62(int64(randtool.GetRandom(62)))
+	rid := gotool.Base62Increment(id) + gotool.Encode10To62(int64(randtool.GetRandom(62)))
 	count := 20
 	mlist := make([]kafkatool.WriteData, count)
 	for i := 0; i < count; i++ {
@@ -116,26 +116,28 @@ func win(id string) ([]kafkatool.WriteData, string) {
 		d, h := gotool.DateTimeFromTimeStamp(t)
 		tid = gotool.Base62Increment(tid)
 		rid = gotool.Base62Increment(rid)
+
 		var bonus int64 = 30000
 		quantity := decimal.NewFromInt(bonus).Mul(decimal.NewFromFloat(0.04))
 		var fee int64 = gotool.Str2int64(quantity.String())
 		var value int64 = 10000 + bonus - fee
 
-		gamebet := &GameWinResult{
-			TransactionID:   tid,
-			RoundID:         rid,
-			TransactionType: "win",
-			GameCode:        "THUSS",
-			BetID:           1,
-			Value:           value,
-			FinishTime:      t,
-			PL:              "20",
-		}
+		gamebet := &[]GameWinResult{{
+			BetID:      1,
+			Value:      value,
+			FinishTime: t,
+			PL:         "20",
+		}, {
+			BetID:      1,
+			Value:      value,
+			FinishTime: t,
+			PL:         "20",
+		}}
 
 		gamelog := &GameLog{
 			TransactionID:   tid,
 			RoundID:         rid,
-			GameCode:        "THUSS",
+			GameCode:        "01",
 			Value:           value,
 			Bonus:           bonus,
 			Fee:             fee,
@@ -165,9 +167,9 @@ func win(id string) ([]kafkatool.WriteData, string) {
 	return mlist, tid
 }
 func refund(id, relate string) []kafkatool.WriteData {
-	tid := gotool.Base62Increment(id)
-	rid := gotool.Base62Increment(id)
-	rlateid := gotool.Base62Increment(relate)
+	tid := gotool.Base62Increment(id) + gotool.Encode10To62(int64(randtool.GetRandom(62)))
+	rid := gotool.Base62Increment(id) + gotool.Encode10To62(int64(randtool.GetRandom(62)))
+	rlateid := gotool.Base62Increment(relate) + gotool.Encode10To62(int64(randtool.GetRandom(62)))
 
 	count := 20
 	mlist := make([]kafkatool.WriteData, count)
@@ -188,7 +190,7 @@ func refund(id, relate string) []kafkatool.WriteData {
 			TransactionID:   tid,
 			RoundID:         rid,
 			RelateID:        rlateid,
-			GameCode:        "THUSS",
+			GameCode:        "01",
 			Value:           value,
 			Bonus:           bonus,
 			Fee:             fee,
@@ -197,7 +199,6 @@ func refund(id, relate string) []kafkatool.WriteData {
 			PlayerName:      "15656561",
 			SiteCode:        "TG",
 			Platform:        "UFA",
-			GameResult:      "",
 			DateStr:         d,
 			TimeStr:         h,
 			IsFree:          false,
@@ -240,28 +241,19 @@ type GameLog struct {
 	Timestamp       int64       `json:"@timestamp"`
 }
 type GameBetResult struct {
-	TransactionID   string `json:"transactionId"`
-	TransactionType string `json:"transactionType"`
-	GameCode        string `json:"gameCode"`
-	RoundID         string `json:"roundId"`
-	Country         string `json:"country"`
-	BetID           int    `json:"betId"`
-	Value           int64  `json:"value"`
-	FinishTime      int64  `json:"finishTime"`
+	BetID      int   `json:"betId"`
+	Value      int64 `json:"value"`
+	FinishTime int64 `json:"finishTime"`
 }
 type GameWinResult struct {
-	TransactionID   string `json:"transactionId"`
-	TransactionType string `json:"transactionType"`
-	BetID           int    `json:"betId"`
-	Win             string `json:"win"`
-	Seake           string `json:"seake"`
-	WinMultiplier   string `json:"winMultiplier"`
-	Insurcnce       string `json:"insurcnce"`
-	PL              string `json:"pl"`
-	FinishTime      int64  `json:"finishTime"`
-	GameCode        string `json:"gameCode"`
-	Value           int64  `json:"value"`
-	RoundID         string `json:"roundId"`
+	BetID         int    `json:"betId"`
+	Win           int64  `json:"win"`
+	Stake         string `json:"stake"`
+	WinMultiplier string `json:"winMultiplier"`
+	Insurcnce     string `json:"insurcnce"`
+	PL            string `json:"pl"`
+	FinishTime    int64  `json:"finishTime"`
+	Value         int64  `json:"value"`
 }
 
 type GameRankResult struct {

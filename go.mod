@@ -11,6 +11,7 @@ require (
 	github.com/segmentio/kafka-go v0.4.34
 	github.com/shopspring/decimal v1.3.1
 	github.com/stretchr/testify v1.8.0
+	golang.org/x/text v0.3.7
 )
 
 require (
