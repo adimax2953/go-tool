@@ -76,7 +76,7 @@ func Min(vals ...int64) int64 {
 	return min
 }
 
-func MaxNum(arr []int) (max int, maxIndex int) {
+func MaxNum(arr []int64) (max int64, maxIndex int) {
 	max = arr[0]
 	for i := 0; i < len(arr); i++ {
 		if max < arr[i] {
@@ -86,7 +86,7 @@ func MaxNum(arr []int) (max int, maxIndex int) {
 	}
 	return max, maxIndex
 }
-func MinNum(arr []int) (min int, minIndex int) {
+func MinNum(arr []int64) (min int64, minIndex int) {
 	min = arr[0]
 	for index, val := range arr {
 		if min > val {
