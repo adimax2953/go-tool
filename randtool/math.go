@@ -240,7 +240,9 @@ func minNum(value []int64) (rtpfix [NMaxHit]int64) {
 	for _, val := range value {
 		max += val
 	}
-
+	if max == 0 {
+		return [NMaxHit]int64{0, 25, 25, 25, 25}
+	}
 	rtpfix[1] = gotool.Str2int64(decimal.NewFromInt(value[0]).Div(decimal.NewFromInt(max)).Mul(decimal.NewFromInt(100)).Floor().String())
 	rtpfix[2] = gotool.Str2int64(decimal.NewFromInt(value[1]).Div(decimal.NewFromInt(max)).Mul(decimal.NewFromInt(100)).Floor().String())
 	rtpfix[3] = gotool.Str2int64(decimal.NewFromInt(value[2]).Div(decimal.NewFromInt(max)).Mul(decimal.NewFromInt(100)).Floor().String())
