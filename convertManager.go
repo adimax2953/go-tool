@@ -7,6 +7,18 @@ import (
 	LogTool "github.com/adimax2953/log-tool"
 )
 
+type NonNegative_Integer interface {
+	~int | ~int8 | ~int16 | ~int32 | ~int64
+}
+
+type Negative_Number interface {
+	~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64
+}
+
+type NonNegative_Number interface {
+	~float32 | ~float64 | ~complex64 | ~complex128
+}
+
 // Int轉str - 將整形轉換成字符串
 func IntToStr(n int) string {
 	return strconv.FormatInt(int64(n), 10)

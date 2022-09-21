@@ -19,15 +19,27 @@ var (
 	orgorand = New(rand.NewSource(5489))
 )
 
+type NonNegative_Integer interface {
+	~int | ~int8 | ~int16 | ~int32 | ~int64
+}
+
+type Negative_Number interface {
+	~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64
+}
+
+type NonNegative_Number interface {
+	~float32 | ~float64 | ~complex64 | ~complex128
+}
+
 // Lottery - 長度4的陣列
-func Lottery(values []int64) int {
+func Lottery[T NonNegative_Integer](values []T) int {
 	if len(values) != 4 {
 		return 0
 	}
 	// Calculate Weight -
 	var calcWeight [NMaxHit][2]int64
 	var rtp [NMaxHit]int64 = [NMaxHit]int64{0, 100, 100, 100, 100}
-	var rtpfix [NMaxHit]int64 = ConvertRTPFix([]int64{values[0], values[1], values[2], values[3]})
+	var rtpfix [NMaxHit]int64 = ConvertRTPFix([]int64{interface{}(values[0]).(int64), interface{}(values[1]).(int64), interface{}(values[2]).(int64), interface{}(values[3]).(int64)})
 	var paytable [NMaxHit]int64 = [NMaxHit]int64{0, 1, 1, 1, 1}
 	var paytablefix [NMaxHit]int64 = [NMaxHit]int64{0, rtpfix[1], rtpfix[2], rtpfix[3], rtpfix[4]}
 
