@@ -34,6 +34,15 @@ func NonNanNorInf(v float64, name string) error {
 	return nil
 }
 
+func NonEmptySlice[T Slice](v T, name string) error {
+	if interface{}(v) == nil {
+		return &InvalidArgumentError{
+			Name:   name,
+			Reason: ERR_EMPTY_SLICE,
+		}
+	}
+	return nil
+}
 func NonNegativeInteger[T NonNegative_Integer](v T, name string) error {
 	if v < 0 {
 		return &InvalidArgumentError{
