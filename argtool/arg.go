@@ -38,7 +38,7 @@ func NonNegativeIntegerSlice[T Slice_NonNegative_Integer](v T, name string) erro
 	if len(interface{}(v).([]int64)) > 0 {
 		return &InvalidArgumentError{
 			Name:   name,
-			Reason: ERR_EMPTY_SLICE,
+			Reason: ERR_NON_NEGATIVE_INTENGER_SLICE,
 		}
 	}
 	return nil
@@ -59,7 +59,7 @@ func NonNegativeNumberSlice[T Slice_NonNegative_Number](v T, name string) error 
 	if len(interface{}(v).([]float64)) > 0 {
 		return &InvalidArgumentError{
 			Name:   name,
-			Reason: ERR_NON_NEGATIVE_NUMBER,
+			Reason: ERR_NON_NEGATIVE_NUMBER_SLICE,
 		}
 	}
 	return nil
