@@ -34,8 +34,8 @@ func NonNanNorInf(v float64, name string) error {
 	return nil
 }
 
-func NonEmptySlice[T Slice](v T, name string) error {
-	if interface{}(v) == nil {
+func NonNegativeIntegerSlice[T Slice_NonNegative_Integer](v T, name string) error {
+	if len(interface{}(v).([]int64)) > 0 {
 		return &InvalidArgumentError{
 			Name:   name,
 			Reason: ERR_EMPTY_SLICE,
@@ -43,6 +43,7 @@ func NonEmptySlice[T Slice](v T, name string) error {
 	}
 	return nil
 }
+
 func NonNegativeInteger[T NonNegative_Integer](v T, name string) error {
 	if v < 0 {
 		return &InvalidArgumentError{
@@ -53,6 +54,16 @@ func NonNegativeInteger[T NonNegative_Integer](v T, name string) error {
 	return nil
 }
 
+func NonNegativeNumberSlice[T Slice_NonNegative_Number](v T, name string) error {
+
+	if len(interface{}(v).([]float64)) > 0 {
+		return &InvalidArgumentError{
+			Name:   name,
+			Reason: ERR_NON_NEGATIVE_NUMBER,
+		}
+	}
+	return nil
+}
 func NonNegativeNumber[T NonNegative_Number](v T, name string) error {
 
 	if math.Signbit(interface{}(v).(float64)) {
