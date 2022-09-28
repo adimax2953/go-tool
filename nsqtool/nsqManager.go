@@ -21,6 +21,9 @@ type NsqConfig struct {
 	NSQDs   []string `yaml:"nsqds"`
 	NSQD    string   `yaml:"nsqd"`
 }
+type Nsq struct {
+	Producer *nsq.Producer
+}
 
 func InitializeConsumer(nsqconfig *NsqConfig, topic, channel string, back func(m *nsq.Message) error) {
 	config := nsq.NewConfig()
@@ -63,6 +66,7 @@ func InitializeConsumer(nsqconfig *NsqConfig, topic, channel string, back func(m
 	if err != nil {
 		LogTool.LogFatal("ConnectToNSQLookupds Error ", err)
 	}
+
 	// Graceful shutdown
 	signalChan := make(chan os.Signal, 1)
 	signal.Notify(signalChan, os.Interrupt, syscall.SIGTERM)
@@ -77,7 +81,7 @@ func InitializeConsumer(nsqconfig *NsqConfig, topic, channel string, back func(m
 	<-c.StopChan
 }
 
-func InitializePublisher(nsqconfig *NsqConfig) {
+func InitializePublisher(nsqconfig *NsqConfig) *Nsq {
 	var err error
 	config := nsq.NewConfig()
 	{
@@ -91,8 +95,18 @@ func InitializePublisher(nsqconfig *NsqConfig) {
 	if err != nil {
 		LogTool.LogFatal("NewProducer Error ", err)
 	}
+
+	return &Nsq{Producer: producer}
 }
 
+func (n *Nsq) Send(topic string, msg []byte) error {
+
+	if n == nil || n.Producer == nil {
+		LogTool.LogError("producer nil")
+		return nil
+	}
+	return producer.Publish(topic+"#ephemeral", msg)
+}
 func Send(topic string, msg []byte) error {
 	if producer == nil {
 		LogTool.LogError("producer nil")
