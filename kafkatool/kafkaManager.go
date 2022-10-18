@@ -5,6 +5,7 @@ import (
 	"errors"
 	"net"
 	"strconv"
+	"strings"
 	"time"
 
 	gotool "github.com/adimax2953/go-tool"
@@ -54,13 +55,13 @@ func (config *KafkaConfig) CreateTopic(topic string, num ...int) {
 	}
 	defer conn.Close()
 
-	controller, err := conn.Controller()
+	/*controller, err := conn.Controller()
 	if err != nil {
 		logtool.LogFatal(err.Error())
-	}
+	}*/
 	var controllerConn *kafka.Conn
-
-	controllerConn, err = kafka.Dial(config.Network, net.JoinHostPort(controller.Host, strconv.Itoa(controller.Port)))
+	addr := strings.Split(config.Address, ":")
+	controllerConn, err = kafka.Dial(config.Network, net.JoinHostPort(addr[0], addr[1]))
 	if err != nil {
 		logtool.LogFatal(err.Error())
 	}
@@ -74,7 +75,7 @@ func (config *KafkaConfig) CreateTopic(topic string, num ...int) {
 		},
 	}
 
-	err = controllerConn.CreateTopics(topicConfigs...)
+	err = conn.CreateTopics(topicConfigs...)
 	if err != nil {
 		logtool.LogFatal(err.Error())
 	}

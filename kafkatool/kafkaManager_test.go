@@ -2,7 +2,6 @@ package kafkatool_test
 
 import (
 	"encoding/json"
-	"fmt"
 	"testing"
 	"time"
 
@@ -25,16 +24,16 @@ func Test_SendtoKafka(t *testing.T) {
 		NumPartition:      0,
 		ReplicationFactor: 1,
 	}
-	config.CreateTopic("USS-Game", 10)
+	config.CreateTopic("USS-test", 10)
 	c = *config
-	y, w := gotool.GetWeek()
+	/*y, w := gotool.GetWeek()
 	roundID = fmt.Sprintf("%s%s%06d", gotool.Encode10To62(int64(y))+gotool.Encode10To62(int64(w)), "01", 0)
 
 	mlist, id := bet(roundID)
 	c.WriteMessagesKeyValueList("USS-Game", mlist)
 	mlist, id = win(id)
 	c.WriteMessagesKeyValueList("USS-Game", mlist)
-	c.WriteMessagesKeyValueList("USS-Game", refund(id, roundID))
+	c.WriteMessagesKeyValueList("USS-Game", refund(id, roundID))*/
 	//LogTool.LogDebug("", roundID)
 
 	//config.WriteMessagesKeyValue("test-USS-Game", m)
