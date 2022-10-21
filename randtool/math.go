@@ -9,7 +9,7 @@ import (
 
 const (
 	NMaxHit     = 5
-	NEnlarge    = 300000
+	NEnlarge    = 1
 	BaseEnlarge = 100
 )
 

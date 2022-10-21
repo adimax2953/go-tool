@@ -16,10 +16,10 @@ import (
 
 // KafkaConfig - Represents a Configuration
 type KafkaConfig struct {
-	Network           string `yaml:"network"`
-	Address           string `yaml:"adress"`
-	NumPartition      int    `yaml:"numPartition"`
-	ReplicationFactor int    `yaml:"replicationFactor"`
+	Network           string   `yaml:"network"`
+	Address           []string `yaml:"adress"`
+	NumPartition      int      `yaml:"numPartition"`
+	ReplicationFactor int      `yaml:"replicationFactor"`
 	Conn              *kafka.Conn
 }
 
@@ -49,7 +49,7 @@ func (config *KafkaConfig) CreateTopic(topic string, num ...int) {
 		replicationFactor = num[1]
 	}
 
-	conn, err := kafka.Dial(config.Network, config.Address)
+	conn, err := kafka.Dial(config.Network, config.Address[0])
 	if err != nil {
 		logtool.LogFatal("CreateTopic Dial Error", err.Error())
 	}
@@ -60,7 +60,7 @@ func (config *KafkaConfig) CreateTopic(topic string, num ...int) {
 		logtool.LogFatal(err.Error())
 	}*/
 	var controllerConn *kafka.Conn
-	addr := strings.Split(config.Address, ":")
+	addr := strings.Split(config.Address[0], ":")
 	controllerConn, err = kafka.Dial(config.Network, net.JoinHostPort(addr[0], addr[1]))
 	if err != nil {
 		logtool.LogFatal(err.Error())
@@ -87,7 +87,7 @@ func (config *KafkaConfig) CreateTopic(topic string, num ...int) {
 // DelTopic - 刪除Topic的列表
 func (config *KafkaConfig) DelTopic(topic ...string) {
 
-	conn, err := kafka.Dial(config.Network, config.Address)
+	conn, err := kafka.Dial(config.Network, config.Address[0])
 	if err != nil {
 		logtool.LogFatal(err.Error())
 	}
@@ -115,7 +115,7 @@ func (config *KafkaConfig) DelTopic(topic ...string) {
 // GetTopic - 取得Topic的列表
 func (config *KafkaConfig) GetTopic() []string {
 
-	conn, err := kafka.Dial(config.Network, config.Address)
+	conn, err := kafka.Dial(config.Network, config.Address[0])
 	if err != nil {
 		logtool.LogFatal(err.Error())
 	}
@@ -151,7 +151,7 @@ func (config *KafkaConfig) WriteMessagesKeyValueList(topic string, value []Write
 	mlist := make([]kafka.Message, count)
 
 	w := &kafka.Writer{
-		Addr:                   kafka.TCP(config.Address),
+		Addr:                   kafka.TCP(config.Address...),
 		Topic:                  topic,
 		AllowAutoTopicCreation: true,
 		Balancer:               &kafka.Murmur2Balancer{},
@@ -199,7 +199,7 @@ func (config *KafkaConfig) WriteMessagesKeyValue(topic string, value map[string]
 	mlist := make([]kafka.Message, count)
 
 	w := &kafka.Writer{
-		Addr:                   kafka.TCP(config.Address),
+		Addr:                   kafka.TCP(config.Address...),
 		Topic:                  topic,
 		AllowAutoTopicCreation: true,
 		Balancer:               &kafka.Murmur2Balancer{},
@@ -247,7 +247,7 @@ func (config *KafkaConfig) WriteMessages(topic string, value ...string) {
 	mlist := make([]kafka.Message, count)
 
 	w := &kafka.Writer{
-		Addr:                   kafka.TCP(config.Address),
+		Addr:                   kafka.TCP(config.Address...),
 		Topic:                  topic,
 		AllowAutoTopicCreation: true,
 		Compression:            compress.None,
@@ -288,7 +288,7 @@ func (config *KafkaConfig) WriteMessages(topic string, value ...string) {
 func (config *KafkaConfig) ReadMessages(topic, groupid string) {
 
 	r := kafka.NewReader(kafka.ReaderConfig{
-		Brokers:        []string{config.Address},
+		Brokers:        config.Address,
 		GroupID:        groupid,
 		Topic:          topic,
 		MinBytes:       10e3,        // 10KB

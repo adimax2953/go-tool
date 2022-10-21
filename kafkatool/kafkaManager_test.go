@@ -19,7 +19,7 @@ var trandID string = "0000000000"
 func Test_SendtoKafka(t *testing.T) {
 
 	config := &kafkatool.KafkaConfig{
-		Address:           "192.168.10.151:9092",
+		Address:           []string{"192.168.10.151:9092"},
 		Network:           "tcp",
 		NumPartition:      0,
 		ReplicationFactor: 1,
