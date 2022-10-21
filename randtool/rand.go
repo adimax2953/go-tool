@@ -154,7 +154,7 @@ func getRandomUint32() uint32 {
 }
 
 // Shuffle -打亂陣列
-func Shuffle(nums []int32) []int32 {
+func Shuffle[T NonNegative_Integer](nums []T) []T {
 	for i := len(nums); i > 0; i-- {
 		last := i - 1
 		idx := rand.Intn(i)
