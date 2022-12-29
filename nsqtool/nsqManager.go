@@ -105,7 +105,15 @@ func (n *Nsq) Send(topic string, msg []byte) error {
 		LogTool.LogError("producer nil")
 		return nil
 	}
-	return producer.Publish(topic+"#ephemeral", msg)
+	if err := producer.Ping(); err != nil {
+		LogTool.LogError("producer ping error:%+v", err)
+		return nil
+	}
+	// return producer.Publish(topic+"#ephemeral", msg)
+	// msgCount := 1
+	// responseChan := make(chan *nsq.ProducerTransaction, msgCount)
+	// return producer.PublishAsync(topic+"#ephemeral", msg, responseChan)
+	return producer.PublishAsync(topic+"#ephemeral", msg, nil)
 }
 func Send(topic string, msg []byte) error {
 	if producer == nil {
