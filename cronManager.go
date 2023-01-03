@@ -43,14 +43,12 @@ func (m *Timer) Start(d time.Duration) {
 		for {
 			select {
 			case <-m.timer.C:
-				if m.Actor.Range != nil {
-					f := func(key, value interface{}) bool {
-						f := value.(func())
-						go f()
-						return true
-					}
-					m.Actor.Range(f)
+				f := func(key, value interface{}) bool {
+					f := value.(func())
+					go f()
+					return true
 				}
+				m.Actor.Range(f)
 			}
 		}
 	}()

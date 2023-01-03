@@ -28,7 +28,7 @@ type Nsq struct {
 func InitializeConsumer(nsqconfig *NsqConfig, topic, channel string, back func(m *nsq.Message) error) {
 	config := nsq.NewConfig()
 	{
-		config.MaxInFlight = 8
+		config.MaxInFlight = 80
 		config.HeartbeatInterval = 10
 		config.DefaultRequeueDelay = 0
 		config.MaxBackoffDuration = time.Millisecond * 50
@@ -115,7 +115,7 @@ func (n *Nsq) Send(topic string, msg []byte) error {
 	// return producer.PublishAsync(topic+"#ephemeral", msg, responseChan)
 	return producer.PublishAsync(topic+"#ephemeral", msg, nil)
 }
-func Send(topic string, msg []byte) error {
+func (n *Nsq) SendSync(topic string, msg []byte) error {
 	if producer == nil {
 		LogTool.LogError("producer nil")
 		return nil

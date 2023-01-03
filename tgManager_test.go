@@ -8,7 +8,7 @@ import (
 )
 
 func Test_SendtoTG(t *testing.T) {
-
+	return
 	TgbotChatID := -603254809
 	TgbotToken := "5222610499:AAEdDXEcLnNvQnHx07w38wU3sysONI0-MzU"
 
