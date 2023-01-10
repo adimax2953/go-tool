@@ -28,7 +28,7 @@ type Nsq struct {
 func InitializeConsumer(nsqconfig *NsqConfig, topic, channel string, back func(m *nsq.Message) error) {
 	config := nsq.NewConfig()
 	{
-		config.MaxInFlight = 8
+		config.MaxInFlight = 5000
 		config.HeartbeatInterval = 10
 		config.DefaultRequeueDelay = 0
 		config.MaxBackoffDuration = time.Millisecond * 50
@@ -36,6 +36,7 @@ func InitializeConsumer(nsqconfig *NsqConfig, topic, channel string, back func(m
 
 	chars := []byte("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 	buf := make([]byte, 10)
+	rand.Seed(time.Now().UnixNano())
 	for i := 0; i < 10; i++ {
 		buf[i] = chars[rand.Intn(len(chars))]
 	}
@@ -44,6 +45,7 @@ func InitializeConsumer(nsqconfig *NsqConfig, topic, channel string, back func(m
 	}
 	// test#ephemeral 後綴#ephemeral為臨時Topic或Channel
 	c, err := nsq.NewConsumer(topic+"#ephemeral", channel+"#ephemeral", config)
+	// c, err := nsq.NewConsumer(topic+"", channel+"#ephemeral", config)
 	if err != nil {
 		LogTool.LogFatal("NewConsumer Error ", err)
 	}
