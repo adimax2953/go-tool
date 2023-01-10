@@ -117,7 +117,7 @@ func (n *Nsq) Send(topic string, msg []byte) error {
 	// return producer.PublishAsync(topic+"#ephemeral", msg, responseChan)
 	return producer.PublishAsync(topic+"#ephemeral", msg, nil)
 }
-func Send(topic string, msg []byte) error {
+func (n *Nsq) SendSync(topic string, msg []byte) error {
 	if producer == nil {
 		LogTool.LogError("producer nil")
 		return nil
