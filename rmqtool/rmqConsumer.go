@@ -15,8 +15,8 @@ import (
 type ConsumerMode int
 
 const (
-	PubSubMode ConsumerMode = iota // 預設用pub/sub mode 用於水平擴展
-	SingleMode                     // 同樣group中的的consumer 只會有一個consumer收到訊息
+	SingleMode ConsumerMode = iota // 同樣group中的的consumer 只會有一個consumer收到訊息
+	PubSubMode                     // pub/sub mode 用於水平擴展 group 中的所有consumer 都會收到同一條消息
 )
 
 type ConsumerConfig struct {
@@ -77,9 +77,9 @@ func getMessageSelector(config *ConsumerConfig) consumer.MessageSelector {
 
 func getConsumerMode(mode ConsumerMode) consumer.MessageModel {
 	switch mode {
-	case SingleMode:
-		return consumer.Clustering
-	default:
+	case PubSubMode:
 		return consumer.BroadCasting
+	default:
+		return consumer.Clustering
 	}
 }
