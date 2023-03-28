@@ -7,12 +7,10 @@ import (
 	"github.com/apache/rocketmq-client-go/v2/primitive"
 	"github.com/apache/rocketmq-client-go/v2/producer"
 	"github.com/apache/rocketmq-client-go/v2/rlog"
-	"sync"
 )
 
 var (
-	p    rocketmq.Producer
-	once sync.Once
+	p rocketmq.Producer
 )
 
 type RmqConfig struct {
@@ -30,22 +28,25 @@ type RmqMsg struct {
 	Body  []byte
 }
 
+func SetRLogLevelToError() {
+	rlog.SetLogLevel("error")
+}
+
 func InitializePublisher(config *RmqConfig) *Rmq {
-	once.Do(func() {
-		rlog.SetLogLevel("error")
-	})
-	p, _ = rocketmq.NewProducer(
+	var err error
+	p, err = rocketmq.NewProducer(
 		producer.WithNameServer(config.NameServers),
-		//producer.WithNameServer([]string{"0.0.0.0:9876"}),
 		producer.WithRetry(2),
 	)
-
-	err := p.Start()
 	if err != nil {
-		if err != nil {
-			LogTool.LogFatal("NewProducer Error ", err)
-		}
+		LogTool.LogFatal("NewProducer Error ", err)
 	}
+
+	err = p.Start()
+	if err != nil {
+		LogTool.LogFatal("start produce Error ", err)
+	}
+
 	return &Rmq{
 		Producer: &p,
 	}

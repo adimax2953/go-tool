@@ -3,6 +3,7 @@ package rmqtool
 import (
 	"context"
 	"encoding/json"
+	"github.com/apache/rocketmq-client-go/v2/admin"
 	"github.com/apache/rocketmq-client-go/v2/consumer"
 	"github.com/apache/rocketmq-client-go/v2/primitive"
 	"github.com/stretchr/testify/assert"
@@ -47,4 +48,40 @@ func TestConsumer(t *testing.T) {
 	}
 	InitializeConsumer(config, consumerConfig)
 	time.Sleep(10 * time.Second)
+}
+
+func TestCreateTopic(t *testing.T) {
+	broker := "103.103.81.12:10911"
+
+	checkAdmin, err := admin.NewAdmin(admin.WithResolver(primitive.NewPassthroughResolver(nameServers)))
+	assert.Empty(t, err)
+	topics := []string{
+		"5state",
+		"7betzone",
+		"4join",
+		"5leave",
+		"3bet",
+		"3win",
+		"5other",
+		"8sendGame",
+		"7sendAll",
+		"9askrobots",
+		"7records",
+		"6record",
+		"8opcommit",
+		"7ctimout",
+		"7dealing",
+		"8matching",
+		"6commit",
+	}
+
+	for _, v := range topics {
+		err = checkAdmin.CreateTopic(
+			context.TODO(),
+			admin.WithBrokerAddrCreate(broker),
+			admin.WithTopicCreate(v),
+		)
+		assert.Empty(t, err)
+	}
+
 }

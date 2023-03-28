@@ -6,7 +6,6 @@ import (
 	"github.com/apache/rocketmq-client-go/v2"
 	"github.com/apache/rocketmq-client-go/v2/consumer"
 	"github.com/apache/rocketmq-client-go/v2/primitive"
-	"github.com/apache/rocketmq-client-go/v2/rlog"
 	"os"
 	"os/signal"
 	"syscall"
@@ -29,10 +28,8 @@ type ConsumerConfig struct {
 }
 
 func InitializeConsumer(config *RmqConfig, consumerConfig *ConsumerConfig) {
-	once.Do(func() {
-		rlog.SetLogLevel("error")
-	})
-	c, _ := rocketmq.NewPushConsumer(
+	var err error
+	c, err := rocketmq.NewPushConsumer(
 		consumer.WithGroupName(gerGroupName(consumerConfig)),
 		consumer.WithNsResolver(primitive.NewPassthroughResolver(config.NameServers)),
 		consumer.WithConsumerOrder(consumerConfig.Order), // 是否啟用有序消費
@@ -40,14 +37,19 @@ func InitializeConsumer(config *RmqConfig, consumerConfig *ConsumerConfig) {
 		consumer.WithRetry(2),
 		consumer.WithConsumerModel(getConsumerMode(consumerConfig.ConsumerMode)),
 	)
-	err := c.Subscribe(consumerConfig.Topic, getMessageSelector(consumerConfig), consumerConfig.MsgHandler)
+
 	if err != nil {
-		LogTool.LogErrorf("RockerMQ", "subscribe error: %s", err)
+		LogTool.LogFatalf("RockerMQ", "NewPushConsumer error: %s", err)
+	}
+
+	err = c.Subscribe(consumerConfig.Topic, getMessageSelector(consumerConfig), consumerConfig.MsgHandler)
+	if err != nil {
+		LogTool.LogFatalf("RockerMQ", "subscribe error: %s", err)
 	}
 
 	err = c.Start()
 	if err != nil {
-		LogTool.LogErrorf("RockerMQ", "start consumer error: %s", err)
+		LogTool.LogFatalf("RockerMQ", "start consumer error: %s", err)
 	}
 
 	// Graceful shutdown
@@ -60,7 +62,7 @@ func InitializeConsumer(config *RmqConfig, consumerConfig *ConsumerConfig) {
 }
 
 func gerGroupName(config *ConsumerConfig) string {
-	if config.Group != "" {
+	if config.Group == "" {
 		LogTool.LogFatal("consumer group name is required")
 	}
 	return config.Group
