@@ -149,12 +149,7 @@ func (config *KafkaConfig) WriteMessagesKeyValueList(topic string, value []Write
 		return
 	}
 	mlist := make([]kafka.Message, count)
-	c := count
-	if count%10 != 0 {
-		c += 10
-	}
-	//batchSize := 10485760  //* c
-	//batchBytes := 10485760 //* c
+
 	w := &kafka.Writer{
 		Addr:                   kafka.TCP(config.Address...),
 		Topic:                  topic,
