@@ -37,7 +37,7 @@ services:
       #映射到num.partitions屬性。默認值為1
       #KAFKA_NUM_PARTITIONS: 1
       #映射到auto.create.topics.enable屬性。默認值為true
-      #KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
       #映射到default.replication.factor屬性。默認值為1
       #KAFKA_DEFAULT_REPLICATION_FACTOR: 1
       #映射到log.retention.hours屬性。默認值為168

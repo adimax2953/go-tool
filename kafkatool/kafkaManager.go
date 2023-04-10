@@ -149,16 +149,21 @@ func (config *KafkaConfig) WriteMessagesKeyValueList(topic string, value []Write
 		return
 	}
 	mlist := make([]kafka.Message, count)
-
+	c := count
+	if count%10 != 0 {
+		c += 10
+	}
+	//batchSize := 10485760  //* c
+	//batchBytes := 10485760 //* c
 	w := &kafka.Writer{
 		Addr:                   kafka.TCP(config.Address...),
 		Topic:                  topic,
 		AllowAutoTopicCreation: true,
 		Balancer:               &kafka.Murmur2Balancer{},
 		RequiredAcks:           -1,
-		BatchSize:              1048576,
-		BatchBytes:             1048576,
-		Compression:            compress.None,
+		//BatchSize:              int(batchSize),
+		//BatchBytes:             int64(batchBytes),
+		Compression: compress.None,
 	}
 	sum := 0
 	for _, mv := range value {
@@ -177,6 +182,7 @@ func (config *KafkaConfig) WriteMessagesKeyValueList(topic string, value []Write
 		if err = w.WriteMessages(ctx, mlist...); err != nil {
 			if errors.Is(err, kafka.LeaderNotAvailable) || errors.Is(err, context.DeadlineExceeded) {
 				time.Sleep(time.Millisecond * 100)
+				logtool.LogError("WriteMessages unexpected error %v", err)
 				continue
 			}
 			logtool.LogError("WriteMessages unexpected error %v", err)
@@ -204,9 +210,9 @@ func (config *KafkaConfig) WriteMessagesKeyValue(topic string, value map[string]
 		AllowAutoTopicCreation: true,
 		Balancer:               &kafka.Murmur2Balancer{},
 		RequiredAcks:           -1,
-		BatchSize:              1048576,
-		BatchBytes:             1048576,
-		Compression:            compress.None,
+		//BatchSize:              1048576,
+		//BatchBytes:             1048576,
+		Compression: compress.None,
 	}
 	sum := 0
 	for k, v := range value {
@@ -251,10 +257,10 @@ func (config *KafkaConfig) WriteMessages(topic string, value ...string) {
 		Topic:                  topic,
 		AllowAutoTopicCreation: true,
 		Compression:            compress.None,
-		BatchSize:              1048576,
-		BatchBytes:             1048576,
-		Balancer:               &kafka.Murmur2Balancer{},
-		RequiredAcks:           -1,
+		//BatchSize:              1048576,
+		//BatchBytes:             1048576,
+		Balancer:     &kafka.Murmur2Balancer{},
+		RequiredAcks: -1,
 	}
 
 	for k, v := range value {

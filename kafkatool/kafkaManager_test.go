@@ -2,6 +2,7 @@ package kafkatool_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"testing"
 	"time"
 
@@ -19,27 +20,27 @@ var trandID string = "0000000000"
 func Test_SendtoKafka(t *testing.T) {
 
 	config := &kafkatool.KafkaConfig{
-		Address:           []string{"192.168.10.151:9092"},
+		Address:           []string{"103.103.81.12:19004"},
 		Network:           "tcp",
 		NumPartition:      0,
 		ReplicationFactor: 1,
 	}
 	config.CreateTopic("USS-test", 10)
 	c = *config
-	/*y, w := gotool.GetWeek()
+	y, w := gotool.GetWeek()
 	roundID = fmt.Sprintf("%s%s%06d", gotool.Encode10To62(int64(y))+gotool.Encode10To62(int64(w)), "01", 0)
 
-	mlist, id := bet(roundID)
-	c.WriteMessagesKeyValueList("USS-Game", mlist)
-	mlist, id = win(id)
-	c.WriteMessagesKeyValueList("USS-Game", mlist)
-	c.WriteMessagesKeyValueList("USS-Game", refund(id, roundID))*/
+	mlist, _ := bet(roundID)
+	c.WriteMessagesKeyValueList("USS-test", mlist)
+	//mlist, id = win(id)
+	//c.WriteMessagesKeyValueList("USS-Game", mlist)
+	//c.WriteMessagesKeyValueList("USS-Game", refund(id, roundID))
 	//LogTool.LogDebug("", roundID)
 
 	//config.WriteMessagesKeyValue("test-USS-Game", m)
 
 	//config.WriteMessagesKeyValue("test03", m)
-	//config.ReadMessages("test02", "1")
+	//config.ReadMessages("USS-test", "1")
 	//config.GetTopic()
 	//config.DelTopic(config.GetTopic()...)
 }
@@ -64,6 +65,18 @@ func bet(id string) ([]kafkatool.WriteData, string) {
 
 		gamebet := &[]GameBetResult{{
 			BetID:      1,
+			Value:      value,
+			FinishTime: t,
+		}, {
+			BetID:      2,
+			Value:      value,
+			FinishTime: t,
+		}, {
+			BetID:      2,
+			Value:      value,
+			FinishTime: t,
+		}, {
+			BetID:      2,
 			Value:      value,
 			FinishTime: t,
 		}, {
