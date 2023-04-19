@@ -62,3 +62,15 @@ func (rmq *Rmq) Send(msg *RmqMsg) error {
 	}
 	return err
 }
+
+func (rmq *Rmq) SendAsync(msg *RmqMsg) error {
+	message := primitive.NewMessage(msg.Topic, msg.Body)
+	message.WithTag(msg.Tag)
+	message.WithKeys(msg.Keys)
+	err := p.SendAsync(context.TODO(), func(ctx context.Context, result *primitive.SendResult, err error) {
+		if err != nil {
+			LogTool.LogErrorf("RocketMQ", "send async message error: %s", err)
+		}
+	}, message)
+	return err
+}
