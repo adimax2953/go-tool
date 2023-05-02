@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	gotool "github.com/adimax2953/go-tool"
-	"github.com/adimax2953/go-tool/nsqtool"
+	nsqtool "github.com/adimax2953/go-tool/nsqtool"
 	logtool "github.com/adimax2953/log-tool"
 	"github.com/nsqio/go-nsq"
 )

@@ -20,12 +20,12 @@ var trandID string = "0000000000"
 func Test_SendtoKafka(t *testing.T) {
 
 	config := &kafkatool.KafkaConfig{
-		Address:           []string{"103.103.81.12:19004"},
+		Address:           []string{"103.103.81.12:9092"},
 		Network:           "tcp",
 		NumPartition:      0,
 		ReplicationFactor: 1,
 	}
-	config.CreateTopic("USS-test", 10)
+	//config.CreateTopic("USS-test", 10)
 	c = *config
 	y, w := gotool.GetWeek()
 	roundID = fmt.Sprintf("%s%s%06d", gotool.Encode10To62(int64(y))+gotool.Encode10To62(int64(w)), "01", 0)

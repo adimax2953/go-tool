@@ -17,18 +17,20 @@ services:
     depends_on: 
       - zookeeper 
     ports:
-      - "19004:19004"  
+      - "19004:9092"  
+      - "9092:9092" 
     environment:
-      TZ: CST-8
+      #TZ: CST-8
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENERS: INSIDE://:9092,OUTSIDE://:19004
-      KAFKA_ADVERTISED_LISTENERS: INSIDE://127.0.0.1:9092,OUTSIDE://103.103.81.12:19004
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://10.1.7.41:19004,OUTSIDE://103.103.81.12:19004
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
       #KAFKA_LOG_RETENTION_HOURS: 168
-      #KAFKA_LOG_RETENTION_MINUTES: 2
-      KAFKA_LOG_RETENTION_MS: 60000
+      KAFKA_LOG_RETENTION_MINUTES: 60
+      #KAFKA_LOG_RETENTION_MS: 60000
+
   control-center: 
     image: confluentinc/cp-enterprise-control-center:latest
     hostname: control-center 
@@ -39,8 +41,8 @@ services:
     ports: 
       - "9021:9021" 
     environment: 
-      CONTROL_CENTER_BOOTSTRAP_SERVERS: '10.1.7.41:9092,103.103.81.12:19004' 
-      CONTROL_CENTER_ZOOKEEPER_CONNECT: '10.1.7.41:2181,103.103.81.12:19005' 
+      CONTROL_CENTER_BOOTSTRAP_SERVERS: 'broker:9092,103.103.81.12:19004' 
+      CONTROL_CENTER_ZOOKEEPER_CONNECT: 'zookeeper:2181,103.103.81.12:19005' 
       CONTROL_CENTER_CONNECT_CLUSTER: 'connect:8083' 
       CONTROL_CENTER_KSQL_URL: "http://ksql-server:8088" 
       CONTROL_CENTER_KSQL_ADVERTISED_URL: "http://103.103.81.12:8088" 
@@ -50,13 +52,3 @@ services:
       CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1 
       CONFLUENT_METRICS_TOPIC_REPLICATION: 1 
       PORT: 9021
-
-  kafka-ui:
-    container_name: kafka-ui
-    image: provectuslabs/kafka-ui:latest
-    ports:
-      - "8001:8080"
-    #environment:
-    #  DYNAMIC_CONFIG_ENABLED: "true"
-    #volumes:
-    #  - ~/kui/config.yml:/etc/kafkaui/dynamic_config.yaml

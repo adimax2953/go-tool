@@ -87,3 +87,40 @@ func GetWeek() (y, w int) {
 	tmp, _ := time.ParseInLocation(DateLayout, datetime, loc)
 	return tmp.ISOWeek()
 }
+
+func GetBetweenDates(start string, end string) []string {
+	start = start[:10]
+	end = end[:10]
+	startTime, _ := time.Parse("2006-01-02", start)
+	endTime, _ := time.Parse("2006-01-02", end)
+	dates := make([]string, 0)
+	dates = append(dates, startTime.Format("2006-01-02"))
+	i := 0
+	for {
+		i++
+		queryTime := startTime.AddDate(0, 0, i)
+		if queryTime.After(endTime) {
+			break
+		}
+		dates = append(dates, queryTime.Format("2006-01-02"))
+	}
+	return dates
+}
+
+func GetBetweenTimes(start string, end string) []string {
+	startTime, _ := time.Parse("2006-01-02 15:04:05", start)
+	endTime, _ := time.Parse("2006-01-02 15:04:05", end)
+	dates := make([]string, 0)
+	dates = append(dates, startTime.Format("2006-01-02 15:04:05"))
+	i := 0
+	var queryTime time.Time = startTime
+	for {
+		i++
+		queryTime = queryTime.Add(30 * time.Minute)
+		if queryTime.After(endTime) || queryTime.Equal(endTime) {
+			break
+		}
+		dates = append(dates, queryTime.Format("2006-01-02 15:04:05"))
+	}
+	return dates
+}

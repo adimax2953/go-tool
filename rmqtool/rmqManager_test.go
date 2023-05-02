@@ -3,12 +3,13 @@ package rmqtool
 import (
 	"context"
 	"encoding/json"
+	"testing"
+	"time"
+
 	"github.com/apache/rocketmq-client-go/v2/admin"
 	"github.com/apache/rocketmq-client-go/v2/consumer"
 	"github.com/apache/rocketmq-client-go/v2/primitive"
 	"github.com/stretchr/testify/assert"
-	"testing"
-	"time"
 )
 
 var (

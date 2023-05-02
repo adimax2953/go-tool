@@ -12,9 +12,9 @@ import (
 	LogTool "github.com/adimax2953/log-tool"
 )
 
-//发送GET请求
-//url:请求地址
-//response:请求返回的内容
+// 發送GET請求
+// url:請求地址
+// response:請求返回的內容
 func Get(url string) (response string) {
 	client := http.Client{Timeout: 5 * time.Second}
 	resp, err := client.Get(url)
@@ -41,9 +41,9 @@ func Get(url string) (response string) {
 	return
 }
 
-//发送POST请求
-//url:请求地址, data:POST请求提交的数据,contentType:请求体格式, 如：application/json
-//content:请求放回的内容
+// 發送POST請求
+// url:請求地址, data:POST請求提交的數據,contentType:請求體格式, 如：application/json
+// content:請求放回的內容
 func Post(url string, data interface{}, contentType string) (content string) {
 	jsonStr, _ := json.Marshal(data)
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonStr))
@@ -66,5 +66,4 @@ func Post(url string, data interface{}, contentType string) (content string) {
 	content = string(result)
 
 	return
-
 }
