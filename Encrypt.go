@@ -22,7 +22,7 @@ type Aes struct {
 	Iv        string
 }
 
-// 开始加密
+// 開始加密
 func (a *Aes) Encode(data string) (string, error) {
 	_data := []byte(data)
 	_key := []byte(a.Key)
@@ -38,7 +38,7 @@ func (a *Aes) Encode(data string) (string, error) {
 	return base64.StdEncoding.EncodeToString(_data), nil
 }
 
-// 开始解密
+// 開始解密
 func (a *Aes) Decode(data string) (string, error) {
 	_data, err := base64.StdEncoding.DecodeString(data)
 	if err != nil {

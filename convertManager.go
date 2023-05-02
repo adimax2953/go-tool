@@ -2,8 +2,11 @@ package gotool
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	"reflect"
 	"strconv"
+	"strings"
 
 	LogTool "github.com/adimax2953/log-tool"
 )
@@ -135,4 +138,59 @@ func InterfaceToString(val interface{}) (res string) {
 		res = ""
 	}
 	return
+}
+
+// DataConvert - 資料轉換
+func DataConvert(from interface{}, dst interface{}) error {
+	if reflect.ValueOf(from).Kind() != reflect.Ptr {
+		return errors.New("from need ptr.")
+	}
+	if reflect.ValueOf(dst).Kind() != reflect.Ptr {
+		return errors.New("dst need ptr.")
+	}
+
+	tmpStr, err := JsonMarshal(from)
+
+	if err := JsonUnmarshal(tmpStr, dst); err != nil {
+		LogTool.LogError("DataConvert JsonUnmarshal Error", err)
+		return err
+	}
+
+	_, err2 := JsonMarshal(dst)
+
+	if err2 != nil {
+		return err
+	}
+
+	return nil
+}
+
+// ParseStrToArrayInt32 - ex: 123,555 -> [123,555]
+func ParseStrToArrayInt32(target string, sep string) []int32 {
+	target = strings.TrimSpace(target)
+	if target == "" {
+		return nil
+	}
+
+	ids := strings.Split(target, sep)
+	result := make([]int32, len(ids))
+	for index, id := range ids {
+		id, err := strconv.ParseInt(strings.TrimSpace(id), 10, 32)
+
+		if err != nil {
+			return nil
+		}
+
+		result[index] = int32(id)
+	}
+	return result
+}
+
+// ParseStrToArrayStr - ex: "嘎抓","打妹" -> ["嘎抓","打妹"]
+func ParseStrToArrayStr(target string, sep string) []string {
+	target = strings.TrimSpace(target)
+	if target == "" {
+		return nil
+	}
+	return strings.Split(target, sep)
 }

@@ -8,6 +8,9 @@ import (
 )
 
 func Test_WorkPool(t *testing.T) {
+
+	LogTool.LogInfo(gotool.Percent(1000, 980))
+
 	return
 	runTimes := 1000000
 

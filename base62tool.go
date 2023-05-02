@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	LogTool "github.com/adimax2953/log-tool"
+	"github.com/shopspring/decimal"
 	"golang.org/x/text/encoding/charmap"
 	"golang.org/x/text/encoding/simplifiedchinese"
 )
@@ -102,4 +103,15 @@ func reverse(a []byte) {
 	for left, right := 0, len(a)-1; left < right; left, right = left+1, right-1 {
 		a[left], a[right] = a[right], a[left]
 	}
+}
+
+// Percent - 取得 百分比
+func Percent(value1, value2 int64) string {
+	if value1 == 0 || value2 == 0 {
+		return "0"
+	}
+
+	result := decimal.NewFromInt(value2).Div(decimal.NewFromInt(value1)).Mul(decimal.NewFromInt(100)).StringFixed(2)
+
+	return result
 }
