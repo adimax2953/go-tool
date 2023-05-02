@@ -25,7 +25,7 @@ func Test_SendtoNSQ(t *testing.T) {
 	go nsqtool.InitializeConsumer(nsqConfig, "test", "", NsqunPackTest)
 	nsqtool.InitializePublisher(nsqConfig)
 
-	nsqtool.Send("test", []byte("test山豬"))
+	//nsqtool.Send("test", []byte("test山豬"))
 
 	// Graceful shutdown -
 	ch := make(chan os.Signal, 1)

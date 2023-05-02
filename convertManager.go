@@ -1,6 +1,7 @@
 package gotool
 
 import (
+	"encoding/json"
 	"fmt"
 	"strconv"
 
@@ -65,8 +66,8 @@ func AbsInt32(n int32) int32 {
 	return n
 }
 
-// Str2Int - 字串轉Int
-func Str2Int(str string) int {
+// StrToInt - 字串轉 Int
+func StrToInt(str string) int {
 	num, err := strconv.Atoi(str)
 	if err != nil {
 		LogTool.LogDebug("轉int出錯")
@@ -74,8 +75,8 @@ func Str2Int(str string) int {
 	return num
 }
 
-// Str2int32 - 字串轉 Int32
-func Str2int32(str string) (int32, error) {
+// StrToInt32 - 字串轉 Int32
+func StrToInt32(str string) (int32, error) {
 	num, err := strconv.ParseInt(str, 10, 32) //轉完可能變int64
 	if err != nil {
 		LogTool.LogDebug("轉int32出錯")
@@ -83,8 +84,8 @@ func Str2int32(str string) (int32, error) {
 	return int32(num), err
 }
 
-// Str2int64 - 字串轉Int64
-func Str2int64(str string) int64 {
+// StrToInt64 - 字串轉 Int64
+func StrToInt64(str string) int64 {
 	num, err := strconv.ParseInt(str, 10, 64) //轉完可能變int64
 	if err != nil {
 		LogTool.LogDebug("轉int64出錯%v", err)
@@ -92,11 +93,46 @@ func Str2int64(str string) int64 {
 	return int64(num)
 }
 
-// GetStringEnd -取得字串最後一碼字
+// GetStringEnd - 取得字串最後一碼字
 func GetStringEnd(str string) string {
 	strlen := len(str)
 	if strlen == 0 {
 		return "14"
 	}
 	return str[strlen-1 : strlen]
+}
+
+// InterfaceToString - Interface轉字串
+func InterfaceToString(val interface{}) (res string) {
+	if val == nil {
+		return ""
+	}
+
+	switch v := val.(type) {
+	case float64:
+		res = strconv.FormatFloat(val.(float64), 'f', 6, 64)
+	case float32:
+		res = strconv.FormatFloat(float64(val.(float32)), 'f', 6, 32)
+	case int:
+		res = strconv.FormatInt(int64(val.(int)), 10)
+	case int32:
+		res = strconv.FormatInt(int64(val.(int32)), 10)
+	case int64:
+		res = strconv.FormatInt(val.(int64), 10)
+	case uint:
+		res = strconv.FormatUint(uint64(val.(uint)), 10)
+	case uint64:
+		res = strconv.FormatUint(val.(uint64), 10)
+	case uint32:
+		res = strconv.FormatUint(uint64(val.(uint32)), 10)
+	case json.Number:
+		res = val.(json.Number).String()
+	case string:
+		res = val.(string)
+	case []byte:
+		res = string(v)
+	default:
+		res = ""
+	}
+	return
 }

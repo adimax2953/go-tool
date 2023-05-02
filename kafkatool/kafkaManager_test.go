@@ -60,7 +60,7 @@ func bet(id string) ([]kafkatool.WriteData, string) {
 
 		var bonus int64 = 0
 		quantity := decimal.NewFromInt(bonus).Mul(decimal.NewFromFloat(0.04))
-		var fee int64 = gotool.Str2int64(quantity.String())
+		var fee int64 = gotool.StrToInt64(quantity.String())
 		var value int64 = 10000 + bonus - fee
 
 		gamebet := &[]GameBetResult{{
@@ -131,7 +131,7 @@ func win(id string) ([]kafkatool.WriteData, string) {
 
 		var bonus int64 = 30000
 		quantity := decimal.NewFromInt(bonus).Mul(decimal.NewFromFloat(0.04))
-		var fee int64 = gotool.Str2int64(quantity.String())
+		var fee int64 = gotool.StrToInt64(quantity.String())
 		var value int64 = 10000 + bonus - fee
 
 		gamebet := &[]GameWinResult{{
@@ -195,7 +195,7 @@ func refund(id, relate string) []kafkatool.WriteData {
 
 		var bonus int64 = 0
 		quantity := decimal.NewFromInt(bonus).Mul(decimal.NewFromFloat(0.04))
-		var fee int64 = gotool.Str2int64(quantity.String())
+		var fee int64 = gotool.StrToInt64(quantity.String())
 		var value int64 = 10000 + bonus - fee
 
 		gamelog := &GameLog{
