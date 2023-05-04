@@ -112,6 +112,5 @@ func Percent(value1, value2 int64) string {
 	}
 
 	result := decimal.NewFromInt(value2).Div(decimal.NewFromInt(value1)).Mul(decimal.NewFromInt(100)).StringFixed(2)
-
 	return result
 }
