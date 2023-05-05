@@ -40,12 +40,12 @@
 ### nsqtool
   - nsq相關開發工具
   - docker-compose
-   - 放docker-compose.yml 
-   - 
+     - 放docker-compose.yml 
+  
 ### rmqtool
   - rocketmq相關開發工具
   - docker-compose
-   - 放docker-compose.yml 
+    - 放docker-compose.yml 
   
 ### randtool
 - 基於梅森旋轉鏈(github.com/seehuhn/mt19937)開發的rng工具 
