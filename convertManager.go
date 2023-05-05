@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/adimax2953/go-tool/jsontool"
 	LogTool "github.com/adimax2953/log-tool"
 )
 
@@ -149,14 +150,14 @@ func DataConvert(from interface{}, dst interface{}) error {
 		return errors.New("dst need ptr.")
 	}
 
-	tmpStr, err := JsonMarshal(from)
+	tmpStr, err := jsontool.JsonMarshal(from)
 
-	if err := JsonUnmarshal(tmpStr, dst); err != nil {
+	if err := jsontool.JsonUnmarshal(tmpStr, dst); err != nil {
 		LogTool.LogError("DataConvert JsonUnmarshal Error", err)
 		return err
 	}
 
-	_, err2 := JsonMarshal(dst)
+	_, err2 := jsontool.JsonMarshal(dst)
 
 	if err2 != nil {
 		return err
