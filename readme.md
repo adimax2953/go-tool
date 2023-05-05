@@ -35,7 +35,7 @@
 ### kafkatool
   - kafka相關開發工具
   - docker-compose
-   - 放docker-compose.yml 
+    - 放docker-compose.yml 
 
 ### nsqtool
   - nsq相關開發工具
