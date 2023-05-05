@@ -1,11 +1,11 @@
-package gotool_test
+package jsontool_test
 
 import (
 	"encoding/json"
 	"testing"
 	"time"
 
-	gjson "github.com/adimax2953/go-tool/json"
+	"github.com/adimax2953/go-tool/jsontool"
 	LogTool "github.com/adimax2953/log-tool"
 )
 
@@ -32,13 +32,13 @@ func Test_Json(t *testing.T) {
 		RequestTime: time.Now().UnixMilli(),
 	}
 
-	body, err := gjson.JsonMarshal(result)
+	body, err := jsontool.JsonMarshal(result)
 	if err != nil {
 		result.Status = "result Marshal fail"
 	}
 	LogTool.LogDebug("result", body)
 
-	if err := gjson.JsonUnmarshal(body, &args); err != nil {
+	if err := jsontool.JsonUnmarshal(body, &args); err != nil {
 		result.Status = "args Unmarshal fail"
 	}
 	LogTool.LogDebug("args", *args)

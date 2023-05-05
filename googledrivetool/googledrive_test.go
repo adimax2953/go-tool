@@ -1,15 +1,15 @@
-package googledrive_test
+package googledrivetool_test
 
 import (
 	"testing"
 
-	"github.com/adimax2953/go-tool/googledrive"
+	"github.com/adimax2953/go-tool/googledrivetool"
 	LogTool "github.com/adimax2953/log-tool"
 )
 
 func TestQQ(t *testing.T) {
 	serviceAccountFilePath := "ace-destination-385603-579fe600e78a.json"
-	g := googledrive.Google{}
+	g := googledrivetool.Google{}
 	err := g.Init(serviceAccountFilePath)
 	if err != nil {
 		LogTool.LogError("Init error ", err)

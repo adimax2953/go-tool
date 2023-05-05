@@ -1,4 +1,4 @@
-package gotool
+package jsontool
 
 import (
 	jsoniter "github.com/json-iterator/go"

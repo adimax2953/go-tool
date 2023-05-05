@@ -1,4 +1,4 @@
-package http
+package httptool
 
 const (
 	GET      = "GET"

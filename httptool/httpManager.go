@@ -1,4 +1,4 @@
-package http
+package httptool
 
 import (
 	"errors"
@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"time"
 
-	gjson "github.com/adimax2953/go-tool/json"
+	"github.com/adimax2953/go-tool/jsontool"
 
 	"github.com/valyala/fasthttp"
 )
@@ -146,7 +146,7 @@ func (c *Service) PostByte(path string, data interface{}) ([]byte, error) {
 	req.Header.SetContentType("application/json; charset=utf-8")
 	req.Header.SetMethod(POST)
 
-	body, err := gjson.JsonMarshal(data)
+	body, err := jsontool.JsonMarshal(data)
 	if err != nil {
 		return nil, err
 	}
@@ -190,7 +190,7 @@ func (c *Service) PutByte(path string, data interface{}) ([]byte, error) {
 	req.Header.SetContentType("application/json; charset=utf-8")
 	req.Header.SetMethod(PUT)
 
-	body, err := gjson.JsonMarshal(data)
+	body, err := jsontool.JsonMarshal(data)
 	if err != nil {
 		return nil, err
 	}
@@ -234,7 +234,7 @@ func (c *Service) PatchByte(path string, data interface{}) ([]byte, error) {
 	req.Header.SetContentType("application/json; charset=utf-8")
 	req.Header.SetMethod(PATCH)
 
-	body, err := gjson.JsonMarshal(data)
+	body, err := jsontool.JsonMarshal(data)
 	if err != nil {
 		return nil, err
 	}
