@@ -1,14 +1,11 @@
 # go-tool
 
 
-## Contents
+## Install
 
-
-## Installation
-
-## Environment
-
-## Architecture
+```console
+go get -u -v github.com/adimax2953/go-tool
+```
 
 ## File Archetecture 
 ### argtool
@@ -51,3 +48,28 @@
 - 基於梅森旋轉鏈(github.com/seehuhn/mt19937)開發的rng工具 
 
 
+### Dependency
+
+- testify
+
+  ```console
+    go get -u -v github.com/stretchr/testify
+  ```
+
+- log-tool
+
+  ```console
+    go get -u -v github.com/adimax2953/log-tool
+  ```
+
+- rocketmq-client-go
+
+  ```console
+    go get -u -v github.com/apache/rocketmq-client-go/v2
+  ```
+
+- json-iterator
+
+  ```console
+    go get -u -v github.com/json-iterator/go
+  ```
