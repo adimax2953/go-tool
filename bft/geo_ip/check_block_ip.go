@@ -1,14 +1,14 @@
 package geo_ip
 
 import (
-	"log"
 	"net"
 
+	LogTool "github.com/adimax2953/log-tool"
 	"github.com/oschwald/geoip2-golang"
 )
 
 const (
-	libPath = "lib/GeoLite2-City.mmdb"
+	libPath = "lib/ip.mmdb"
 )
 
 // 香港、澳门、台湾、菲律宾、柬埔寨
@@ -27,7 +27,7 @@ var blockCountryCode map[string]bool = map[string]bool{
 func CheckBlockIp(sourceIp string) (bool, error) {
 	db, err := geoip2.Open(libPath)
 	if err != nil {
-		log.Println(err)
+		LogTool.LogError("", err)
 		return false, err
 	}
 	defer db.Close()
@@ -35,7 +35,7 @@ func CheckBlockIp(sourceIp string) (bool, error) {
 	ip := net.ParseIP(sourceIp)
 	record, err := db.City(ip)
 	if err != nil {
-		log.Println(err)
+		LogTool.LogError("", err)
 		return false, err
 	}
 
@@ -48,7 +48,7 @@ func CheckBlockIp(sourceIp string) (bool, error) {
 func ParseIp(sourceIp string) (*geoip2.City, error) {
 	db, err := geoip2.Open(libPath)
 	if err != nil {
-		log.Println(err)
+		LogTool.LogError("", err)
 		return nil, err
 	}
 	defer db.Close()
@@ -56,7 +56,7 @@ func ParseIp(sourceIp string) (*geoip2.City, error) {
 	ip := net.ParseIP(sourceIp)
 	record, err := db.City(ip)
 	if err != nil {
-		log.Println(err)
+		LogTool.LogError("", err)
 		return nil, err
 	}
 
