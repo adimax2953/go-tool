@@ -1,10 +1,10 @@
-package gotool_test
+package tgbottool_test
 
 import (
 	"fmt"
 	"testing"
 
-	gotool "github.com/adimax2953/go-tool"
+	tg "github.com/adimax2953/go-tool/tgbottool"
 )
 
 func Test_SendtoTG(t *testing.T) {
@@ -14,14 +14,14 @@ func Test_SendtoTG(t *testing.T) {
 
 	msg := fmt.Sprintf("\n事件：" + "山豬開工了阿")
 
-	gotool.SendToTG(TgbotChatID, TgbotToken, "Prod", msg)
+	tg.SendToTG(TgbotChatID, TgbotToken, "Prod", msg)
 
 	TgbotChatID = -544039489
-	gotool.SendToTG(TgbotChatID, TgbotToken, "Prod", msg)
+	tg.SendToTG(TgbotChatID, TgbotToken, "Prod", msg)
 
 	TgbotChatID = -662611117
-	gotool.SendToTG(TgbotChatID, TgbotToken, "Prod", msg)
+	tg.SendToTG(TgbotChatID, TgbotToken, "Prod", msg)
 
 	TgbotChatID = -800990157
-	gotool.SendToTG(TgbotChatID, TgbotToken, "Prod", msg)
+	tg.SendToTG(TgbotChatID, TgbotToken, "Prod", msg)
 }

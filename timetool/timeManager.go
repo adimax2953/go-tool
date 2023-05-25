@@ -1,4 +1,4 @@
-package gotool
+package timetool
 
 import (
 	"fmt"

@@ -14,6 +14,8 @@ require (
 	github.com/segmentio/kafka-go v0.4.34
 	github.com/shopspring/decimal v1.3.1
 	github.com/stretchr/testify v1.8.0
+	github.com/valyala/fasthttp v1.47.0
+	golang.org/x/net v0.9.0
 	golang.org/x/text v0.9.0
 	google.golang.org/api v0.22.0
 )
@@ -44,12 +46,10 @@ require (
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
-	github.com/valyala/fasthttp v1.47.0 // indirect
 	go.opencensus.io v0.21.0 // indirect
 	go.uber.org/atomic v1.5.1 // indirect
 	golang.org/x/crypto v0.7.0 // indirect
 	golang.org/x/lint v0.0.0-20190930215403-16217165b5de // indirect
-	golang.org/x/net v0.9.0 // indirect
 	golang.org/x/oauth2 v0.7.0 // indirect
 	golang.org/x/sys v0.7.0 // indirect
 	golang.org/x/term v0.7.0 // indirect

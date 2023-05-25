@@ -6,6 +6,8 @@ import (
 	"testing"
 	"time"
 
+	timetool "github.com/adimax2953/go-tool/timetool"
+
 	gotool "github.com/adimax2953/go-tool"
 	"github.com/adimax2953/go-tool/kafkatool"
 	"github.com/adimax2953/go-tool/randtool"
@@ -27,7 +29,7 @@ func Test_SendtoKafka(t *testing.T) {
 	}
 	//config.CreateTopic("USS-test", 10)
 	c = *config
-	y, w := gotool.GetWeek()
+	y, w := timetool.GetWeek()
 	roundID = fmt.Sprintf("%s%s%06d", gotool.Encode10To62(int64(y))+gotool.Encode10To62(int64(w)), "01", 0)
 
 	mlist, _ := bet(roundID)
@@ -54,7 +56,7 @@ func bet(id string) ([]kafkatool.WriteData, string) {
 	for i := 0; i < count; i++ {
 
 		t := time.Now().Unix()
-		d, h := gotool.DateTimeFromTimeStamp(t)
+		d, h := timetool.DateTimeFromTimeStamp(t)
 		tid = gotool.Base62Increment(tid) + gotool.Encode10To62(int64(randtool.GetRandom(62)))
 		rid = gotool.Base62Increment(rid) + gotool.Encode10To62(int64(randtool.GetRandom(62)))
 
@@ -125,7 +127,7 @@ func win(id string) ([]kafkatool.WriteData, string) {
 	for i := 0; i < count; i++ {
 
 		t := time.Now().Unix()
-		d, h := gotool.DateTimeFromTimeStamp(t)
+		d, h := timetool.DateTimeFromTimeStamp(t)
 		tid = gotool.Base62Increment(tid)
 		rid = gotool.Base62Increment(rid)
 
@@ -188,7 +190,7 @@ func refund(id, relate string) []kafkatool.WriteData {
 	for i := 0; i < count; i++ {
 
 		t := time.Now().Unix()
-		d, h := gotool.DateTimeFromTimeStamp(t)
+		d, h := timetool.DateTimeFromTimeStamp(t)
 		tid = gotool.Base62Increment(tid)
 		rid = gotool.Base62Increment(rid)
 		rlateid = gotool.Base62Increment(rlateid)

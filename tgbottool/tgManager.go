@@ -1,4 +1,4 @@
-package gotool
+package tgbottool
 
 import (
 	"fmt"
@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+
+	timetool "github.com/adimax2953/go-tool/timetool"
 
 	LogTool "github.com/adimax2953/log-tool"
 )
@@ -40,14 +42,14 @@ func SendTextToTelegramChat(chatId int, text string, Token string) (string, erro
 }
 
 func SendGameEventToTG(TgbotChatID int, TgbotToken, game, env, reson string) {
-	msg := fmt.Sprintf("\n" + game + "遊戲服務器\n環境：" + env + "\n發生時間：" + TimeNowStr() + "\n版本號：" + "")
+	msg := fmt.Sprintf("\n" + game + "遊戲服務器\n環境：" + env + "\n發生時間：" + timetool.TimeNowStr() + "\n版本號：" + "")
 	msg += reson
 	LogTool.LogSystem(msg)
 	SendTextToTelegramChat(TgbotChatID, msg, TgbotToken)
 }
 
 func SendToTG(TgbotChatID int, TgbotToken, env, reson string) {
-	msg := fmt.Sprintf("\nXXX遊戲服務器\n環境：" + env + "\n發生時間：" + TimeNowStr() + "\n版本號：" + "")
+	msg := fmt.Sprintf("\nXXX遊戲服務器\n環境：" + env + "\n發生時間：" + timetool.TimeNowStr() + "\n版本號：" + "")
 	msg += reson
 	LogTool.LogSystem(msg)
 	SendTextToTelegramChat(TgbotChatID, msg, TgbotToken)
