@@ -4,17 +4,17 @@ import (
 	"fmt"
 	"testing"
 
-	randtool "github.com/adimax2953/go-tool/randtool"
+	"github.com/adimax2953/go-tool/randtool"
 	LogTool "github.com/adimax2953/log-tool"
 	"github.com/shopspring/decimal"
 )
 
 func Test_Math(t *testing.T) {
+	randtool.GetRandom(100000)
 
 	var runtimes int64 = 1000000
 	var win [randtool.NMaxHit]int64 = [randtool.NMaxHit]int64{0, 0, 0, 0, 0}
 	var wintimes int64 = 0
-
 	for i := 0; i < int(runtimes); i++ {
 
 		idx := randtool.Lottery([]int64{0, 0, 0, 0})
