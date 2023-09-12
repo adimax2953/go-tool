@@ -5,6 +5,7 @@ go 1.19
 require (
 	github.com/adimax2953/log-tool v0.0.6
 	github.com/apache/rocketmq-client-go/v2 v2.1.1
+	github.com/fogleman/gg v1.3.0
 	github.com/json-iterator/go v1.1.12
 	github.com/nsqio/go-nsq v1.1.0
 	github.com/oschwald/geoip2-golang v1.8.0
@@ -16,7 +17,7 @@ require (
 	github.com/stretchr/testify v1.8.0
 	github.com/valyala/fasthttp v1.47.0
 	golang.org/x/net v0.9.0
-	golang.org/x/text v0.9.0
+	golang.org/x/text v0.13.0
 	google.golang.org/api v0.22.0
 )
 
@@ -25,6 +26,7 @@ require (
 	github.com/andybalholm/brotli v1.0.5 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/emirpasic/gods v1.12.0 // indirect
+	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/golang/mock v1.3.1 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
@@ -49,6 +51,7 @@ require (
 	go.opencensus.io v0.21.0 // indirect
 	go.uber.org/atomic v1.5.1 // indirect
 	golang.org/x/crypto v0.7.0 // indirect
+	golang.org/x/image v0.12.0 // indirect
 	golang.org/x/lint v0.0.0-20190930215403-16217165b5de // indirect
 	golang.org/x/oauth2 v0.7.0 // indirect
 	golang.org/x/sys v0.7.0 // indirect
