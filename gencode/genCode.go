@@ -11,6 +11,13 @@ import (
 	"github.com/fogleman/gg"
 )
 
+type ColorData struct {
+	R float64
+	G float64
+	B float64
+	A float64
+}
+
 func GenCode(width, height, length int) string {
 	// 设置随机数种子
 	rand.Seed(time.Now().UnixNano())
