@@ -3,6 +3,7 @@ package csv
 import (
 	"bytes"
 	"encoding/csv"
+	"errors"
 
 	LogTool "github.com/adimax2953/log-tool"
 )
@@ -15,6 +16,12 @@ func CreateCSVWithHeader(header []string, body [][]string) ([]byte, error) {
 	// 创建一个 CSV writer，将数据写入到缓冲区中
 	writer := csv.NewWriter(&buf)
 
+	if header == nil || len(header) == 0 {
+		return nil, errors.New("Header不得為空")
+	}
+	if body == nil || len(body) == 0 {
+		return nil, errors.New("body不得為空")
+	}
 	// 刷新并关闭 CSV writer
 	defer writer.Flush()
 
