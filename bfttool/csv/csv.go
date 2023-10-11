@@ -22,8 +22,6 @@ func CreateCSVWithHeader(header []string, body [][]string) ([]byte, error) {
 	if body == nil || len(body) == 0 {
 		return nil, errors.New("body不得為空")
 	}
-	// 刷新并关闭 CSV writer
-	defer writer.Flush()
 
 	// 写入 CSV 头部
 	if err := writer.Write(header); err != nil {
@@ -44,6 +42,7 @@ func CreateCSVWithHeader(header []string, body [][]string) ([]byte, error) {
 		LogTool.LogError("CSV 写入错误:", err)
 		return nil, err
 	}
-
+	// 刷新并关闭 CSV writer
+	writer.Flush()
 	return buf.Bytes(), nil
 }
