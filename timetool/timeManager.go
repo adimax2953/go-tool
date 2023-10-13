@@ -130,13 +130,14 @@ func GetDurationUntilMidnight() int {
 	// 取得目前時間
 	currentTime := time.Now()
 
-	// 取得今天的午夜時間
+	// 取得隔天的午夜時間
+	nextDay := currentTime.AddDate(0, 0, 1)
 	midnight := time.Date(
-		currentTime.Year(),  // 使用目前年份
-		currentTime.Month(), // 使用目前月份
-		currentTime.Day(),   // 使用當前日期
-		0, 0, 0, 0,          // 凌晨的時間
-		currentTime.Location(),
+		nextDay.Year(),  // 使用隔天年份
+		nextDay.Month(), // 使用隔天月份
+		nextDay.Day(),   // 使用隔天日期
+		0, 0, 0, 0,      // 凌晨的時間
+		nextDay.Location(),
 	)
 
 	// 計算時間差
