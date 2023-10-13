@@ -4,14 +4,20 @@ import (
 	"fmt"
 	"testing"
 
+	gotool "github.com/adimax2953/go-tool"
 	"github.com/adimax2953/go-tool/randtool"
 	LogTool "github.com/adimax2953/log-tool"
 	"github.com/shopspring/decimal"
 )
 
 func Test_Math(t *testing.T) {
-	randtool.GetRandom(100000)
-
+	LogTool.LogDebug("", gotool.Int32ToStr(randtool.GetRandom(10))+
+		gotool.Int32ToStr(randtool.GetRandom(10))+
+		gotool.Int32ToStr(randtool.GetRandom(10))+
+		gotool.Int32ToStr(randtool.GetRandom(10))+
+		gotool.Int32ToStr(randtool.GetRandom(10))+
+		gotool.Int32ToStr(randtool.GetRandom(10)))
+	return
 	var runtimes int64 = 1000000
 	var win [randtool.NMaxHit]int64 = [randtool.NMaxHit]int64{0, 0, 0, 0, 0}
 	var wintimes int64 = 0
