@@ -170,3 +170,17 @@ func GetDurationUntilNextMonth() int {
 	return int(secondsUntilNextMonth)
 
 }
+
+// GetDurationUntil -取得到指定時間的時間差(秒)
+func GetDurationUntil(targetTime time.Time) int {
+	// 取得目前時間
+	currentTime := time.Now()
+
+	// 計算時間差
+	durationUntilTargetTime := targetTime.Sub(currentTime)
+
+	// 將時間差轉換為秒
+	secondsUntilTargetTime := durationUntilTargetTime.Seconds()
+
+	return int(secondsUntilTargetTime)
+}
