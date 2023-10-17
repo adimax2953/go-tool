@@ -137,16 +137,15 @@ func (config *KafkaConfig) GetTopic() []string {
 		logtool.LogInfo(v)
 	}
 	logtool.LogInfo("Kafka GetTopic ", m)
-
 	return m
 }
 
 // WriteMessagesKeyValueList - 發送訊息到Topic
-func (config *KafkaConfig) WriteMessagesKeyValueList(topic string, value []WriteData) {
+func (config *KafkaConfig) WriteMessagesKeyValueList(topic string, value []WriteData) error {
 	count := len(value)
 	if count == 0 {
 		logtool.LogError("WriteMessagesKeyValueList value is nil")
-		return
+		return errors.New("WriteMessagesKeyValueList value is nil")
 	}
 	mlist := make([]kafka.Message, count)
 
@@ -181,13 +180,16 @@ func (config *KafkaConfig) WriteMessagesKeyValueList(topic string, value []Write
 				continue
 			}
 			logtool.LogError("WriteMessages unexpected error %v", err)
+			return err
 		}
 	}
 
 	if err := w.Close(); err != nil {
 		logtool.LogError("failed to close writer:", err)
+		return err
 	}
 	//logtool.LogInfo("Kafka WriteMessages ", mlist)
+	return nil
 }
 
 // WriteMessagesKeyValue - 發送訊息到Topic
