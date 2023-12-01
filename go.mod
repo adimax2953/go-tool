@@ -12,11 +12,11 @@ require (
 	github.com/panjf2000/ants/v2 v2.5.0
 	github.com/robfig/cron v1.2.0
 	github.com/seehuhn/mt19937 v1.0.0
-	github.com/segmentio/kafka-go v0.4.34
+	github.com/segmentio/kafka-go v0.4.46
 	github.com/shopspring/decimal v1.3.1
 	github.com/stretchr/testify v1.8.0
 	github.com/valyala/fasthttp v1.47.0
-	golang.org/x/net v0.9.0
+	golang.org/x/net v0.17.0
 	golang.org/x/text v0.13.0
 	google.golang.org/api v0.22.0
 )
@@ -50,12 +50,12 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	go.opencensus.io v0.21.0 // indirect
 	go.uber.org/atomic v1.5.1 // indirect
-	golang.org/x/crypto v0.7.0 // indirect
+	golang.org/x/crypto v0.14.0 // indirect
 	golang.org/x/image v0.12.0 // indirect
 	golang.org/x/lint v0.0.0-20190930215403-16217165b5de // indirect
 	golang.org/x/oauth2 v0.7.0 // indirect
-	golang.org/x/sys v0.7.0 // indirect
-	golang.org/x/term v0.7.0 // indirect
+	golang.org/x/sys v0.13.0 // indirect
+	golang.org/x/term v0.13.0 // indirect
 	golang.org/x/tools v0.6.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20200526211855-cb27e3aa2013 // indirect
