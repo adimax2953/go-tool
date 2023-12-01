@@ -124,3 +124,64 @@ func GetBetweenTimes(start string, end string) []string {
 	}
 	return dates
 }
+
+// GetDurationUntilMidnight -取得到當日0點的時間差(秒)
+func GetDurationUntilMidnight() int {
+	// 取得目前時間
+	currentTime := time.Now()
+
+	// 取得隔天的午夜時間
+	nextDay := currentTime.AddDate(0, 0, 1)
+	midnight := time.Date(
+		nextDay.Year(),  // 使用隔天年份
+		nextDay.Month(), // 使用隔天月份
+		nextDay.Day(),   // 使用隔天日期
+		0, 0, 0, 0,      // 凌晨的時間
+		nextDay.Location(),
+	)
+
+	// 計算時間差
+	durationUntilMidnight := midnight.Sub(currentTime)
+
+	// 將時間差轉換為秒
+	secondsUntilMidnight := durationUntilMidnight.Seconds()
+	return int(secondsUntilMidnight)
+}
+
+// GetDurationUntilNextMonth -取得到次月1日0點的時間差(秒)
+func GetDurationUntilNextMonth() int {
+	// 取得目前時間
+	currentTime := time.Now()
+
+	// 取得下個月1號的凌晨時間
+	nextMonth := currentTime.AddDate(0, 1, 0)
+	nextMonthMidnight := time.Date(
+		nextMonth.Year(),  // 下個月的年份
+		nextMonth.Month(), // 下個月的月份
+		1,                 // 下個月1號
+		0, 0, 0, 0,        // 凌晨的時間
+		currentTime.Location(),
+	)
+
+	// 計算時間差
+	durationUntilNextMonth := nextMonthMidnight.Sub(currentTime)
+
+	// 將時間差轉換為秒
+	secondsUntilNextMonth := durationUntilNextMonth.Seconds()
+	return int(secondsUntilNextMonth)
+
+}
+
+// GetDurationUntil -取得到指定時間的時間差(秒)
+func GetDurationUntil(targetTime time.Time) int {
+	// 取得目前時間
+	currentTime := time.Now()
+
+	// 計算時間差
+	durationUntilTargetTime := targetTime.Sub(currentTime)
+
+	// 將時間差轉換為秒
+	secondsUntilTargetTime := durationUntilTargetTime.Seconds()
+
+	return int(secondsUntilTargetTime)
+}
