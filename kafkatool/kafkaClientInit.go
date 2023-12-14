@@ -26,6 +26,24 @@ func NewReader(hosts, topic, groupID string) *kafka.Reader {
 	})
 }
 
+// NewDLQReader - 建立NewDLQReader
+// hosts - kafka host list, 可多組, 用逗號分開.
+// e.g.:100.0.0.1:9092,100.0.0.2:9092
+func NewDLQReader(hosts, topic, groupID string) *kafka.Reader {
+	LogTool.LogInfof("newReader", "topic: %s, groupID: %s", topic, groupID)
+	host := strings.Split(hosts, ",")
+	for i := range host {
+		host[i] = strings.TrimSpace(host[i])
+	}
+	return kafka.NewReader(kafka.ReaderConfig{
+		Brokers:          host,
+		GroupID:          groupID,
+		Topic:            topic,
+		MinBytes:         1e6,              // 1M
+		ReadBatchTimeout: 10 * time.Second, // 10秒拉一次
+	})
+}
+
 // NewWriter - 建立Writer, 可多組, 用逗號分開
 // e.g.:100.0.0.1:9092,100.0.0.2:9092
 func NewWriter(hosts, topic string) *kafka.Writer {
