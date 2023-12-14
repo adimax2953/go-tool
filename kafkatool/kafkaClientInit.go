@@ -39,6 +39,7 @@ func NewDLQReader(hosts, topic, groupID string) *kafka.Reader {
 		Brokers:          host,
 		GroupID:          groupID,
 		Topic:            topic,
+		MaxBytes:         1e6,              // 1M
 		MinBytes:         1e6,              // 1M
 		ReadBatchTimeout: 10 * time.Second, // 10秒拉一次
 	})
