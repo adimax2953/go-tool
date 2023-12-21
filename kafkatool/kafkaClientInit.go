@@ -20,9 +20,9 @@ func NewReader(hosts, topic, groupID string) *kafka.Reader {
 		Brokers:  host,
 		GroupID:  groupID,
 		Topic:    topic,
-		MaxBytes: 1e6, // 1MB,  kafka-go v0.4.46 版本這個功能會無效
-		//MinBytes: 1e5,             // 100KB
-		MaxWait: 5 * time.Second, // 5秒拉一次
+		MaxBytes: 1e6,             // 1MB,  kafka-go v0.4.46 版本這個功能會無效
+		MinBytes: 1e5,             // 100KB
+		MaxWait:  5 * time.Second, // 5秒拉一次
 	})
 }
 
