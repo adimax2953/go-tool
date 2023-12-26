@@ -41,3 +41,10 @@ func (r *WorkerCircuitBreaker) Check(ctx context.Context, dataCount int) {
 	}
 	LogTool.LogInfof("Check", "circuit breaker time: %v", time.Since(start))
 }
+func (r *WorkerCircuitBreaker) CheckContinuouslyWriting(ctx context.Context) {
+	err := r.limiter.WaitN(ctx, r.consumeTokenPerRequest)
+	if err != nil {
+		LogTool.LogErrorf("Check", "limiter error: %v", err)
+		return
+	}
+}
