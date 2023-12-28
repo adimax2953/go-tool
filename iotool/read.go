@@ -8,8 +8,6 @@ import (
 	"strings"
 
 	LogTool "github.com/adimax2953/log-tool"
-	"gitlab.com/bf_tech/template/slot/gametemplate/pkg/slotgames/tools"
-	"gitlab.com/bf_tech/template/slot/gametemplate/pkg/slotgames/tools/random"
 )
 
 const (
@@ -106,7 +104,7 @@ type DataMap map[string][]string
 
 // CreateDataMap 建一個讀檔格式(橫式的csv檔,機率表...)
 func CreateDataMap(path string) (DataMap, error) {
-	records, err := tools.OpenCSV(path)
+	records, err := OpenCSV(path)
 	if err != nil {
 		return nil, err
 	}
@@ -147,23 +145,23 @@ func (rm DataMap) GetDataByIndex(inKey string, index int) (string, bool) {
 	return "", ok
 }
 
-// ParseRowDataToWeight 轉為權重結構
-func (rm DataMap) ParseRowDataToWeight(inKey string) (random.ProbWeight, bool) {
-	var rslt random.ProbWeight
-	data, ok := rm.GetDataByKey(inKey)
-	if ok {
-		var probSlice []int64
-		for i := 0; i < len(data); i++ {
-			val, err := strconv.Atoi(data[i])
-			if err != nil {
-				return rslt, false
-			}
-			probSlice = append(probSlice, int64(val))
-		}
-		rslt = random.CreateProb(probSlice...)
-	}
-	return rslt, ok
-}
+// // ParseRowDataToWeight 轉為權重結構
+// func (rm DataMap) ParseRowDataToWeight(inKey string) (random.ProbWeight, bool) {
+// 	var rslt random.ProbWeight
+// 	data, ok := rm.GetDataByKey(inKey)
+// 	if ok {
+// 		var probSlice []int64
+// 		for i := 0; i < len(data); i++ {
+// 			val, err := strconv.Atoi(data[i])
+// 			if err != nil {
+// 				return rslt, false
+// 			}
+// 			probSlice = append(probSlice, int64(val))
+// 		}
+// 		rslt = random.CreateProb(probSlice...)
+// 	}
+// 	return rslt, ok
+// }
 
 // ParseRowDataToInt 轉為int型態
 func (rm DataMap) ParseRowDataToInt(inKey string) ([]int, bool) {
@@ -178,27 +176,27 @@ func (rm DataMap) ParseRowDataToInt(inKey string) ([]int, bool) {
 	return rslt, ok
 }
 
-// ReadPayData 讀取
-func (f Folder) ReadPayData(calcStand int) (*PayTable, error) {
-	payTable := NewPayTable(calcStand)
-	payTableData, err := CreateDataMap(f.getPath(Table))
-	if err != nil {
-		return payTable, err
-	}
-	payTable.InitPayInfo(payTableData)
+// // ReadPayData 讀取
+// func (f Folder) ReadPayData(calcStand int) (*PayTable, error) {
+// 	payTable := NewPayTable(calcStand)
+// 	payTableData, err := CreateDataMap(f.getPath(Table))
+// 	if err != nil {
+// 		return payTable, err
+// 	}
+// 	payTable.InitPayInfo(payTableData)
 
-	if calcStand == int(Line) {
-		payLinesData, err := CreateDataMap(f.getPath(PayLines))
-		if err != nil {
-			return payTable, err
-		}
-		err = payTable.setPayLine(payLinesData)
-		if err != nil {
-			return payTable, err
-		}
-	}
-	return payTable, err
-}
+// 	if calcStand == int(Line) {
+// 		payLinesData, err := CreateDataMap(f.getPath(PayLines))
+// 		if err != nil {
+// 			return payTable, err
+// 		}
+// 		err = payTable.setPayLine(payLinesData)
+// 		if err != nil {
+// 			return payTable, err
+// 		}
+// 	}
+// 	return payTable, err
+// }
 
 func (f Folder) ReadPayLinesData() (DataMap, error) {
 	return CreateDataMap(f.getPath(PayLines))
@@ -214,7 +212,7 @@ func (f Folder) ReadMappingData() (map[int]string, error) {
 
 	path := f.getPath(Mapping)
 
-	records, err := tools.OpenCSV(path)
+	records, err := OpenCSV(path)
 
 	if err != nil {
 		return nil, err
@@ -228,7 +226,7 @@ func (f Folder) ReadMappingData() (map[int]string, error) {
 	field = records[0]
 	for i := 1; i < len(records); i++ {
 		setting := ProbabilitySetting{}
-		if err := tools.SerializeStructData(field, records[i], &setting); err != nil {
+		if err := SerializeStructData(field, records[i], &setting); err != nil {
 			log.Println(err)
 			continue
 		} else {
