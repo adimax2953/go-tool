@@ -2,6 +2,7 @@ package rmqtool
 
 import (
 	"context"
+
 	LogTool "github.com/adimax2953/log-tool"
 	"github.com/apache/rocketmq-client-go/v2"
 	"github.com/apache/rocketmq-client-go/v2/primitive"
@@ -72,5 +73,13 @@ func (rmq *Rmq) SendAsync(msg *RmqMsg) error {
 			LogTool.LogErrorf("RocketMQ", "send async message error: %s", err)
 		}
 	}, message)
+	return err
+}
+
+func (rmq *Rmq) SendOneWay(msg *RmqMsg) error {
+	message := primitive.NewMessage(msg.Topic, msg.Body)
+	message.WithTag(msg.Tag)
+	message.WithKeys(msg.Keys)
+	err := p.SendOneWay(context.TODO(), message)
 	return err
 }
