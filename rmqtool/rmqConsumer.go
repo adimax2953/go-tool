@@ -2,13 +2,14 @@ package rmqtool
 
 import (
 	"context"
+	"os"
+	"os/signal"
+	"syscall"
+
 	LogTool "github.com/adimax2953/log-tool"
 	"github.com/apache/rocketmq-client-go/v2"
 	"github.com/apache/rocketmq-client-go/v2/consumer"
 	"github.com/apache/rocketmq-client-go/v2/primitive"
-	"os"
-	"os/signal"
-	"syscall"
 )
 
 type ConsumerMode int
@@ -19,24 +20,29 @@ const (
 )
 
 type ConsumerConfig struct {
-	Topic        string
-	Tag          string
-	Group        string // consumer group
-	Order        bool   // fifo message
-	ConsumerMode ConsumerMode
-	MsgHandler   func(ctx context.Context, msgs ...*primitive.MessageExt) (consumer.ConsumeResult, error)
+	Topic                      string
+	Tag                        string
+	Group                      string // consumer group
+	Order                      bool   // fifo message
+	ConsumerMode               ConsumerMode
+	ConsumeConcurrentlyMaxSpan int // default 1000
+	MsgHandler                 func(ctx context.Context, msgs ...*primitive.MessageExt) (consumer.ConsumeResult, error)
 }
 
-func InitializeConsumer(config *RmqConfig, consumerConfig *ConsumerConfig) {
-	var err error
-	c, err := rocketmq.NewPushConsumer(
+func InitializeConsumer(config *RmqConfig, consumerConfig *ConsumerConfig, opts ...consumer.Option) {
+
+	options := []consumer.Option{
 		consumer.WithGroupName(gerGroupName(consumerConfig)),
 		consumer.WithNsResolver(primitive.NewPassthroughResolver(config.NameServers)),
 		consumer.WithConsumerOrder(consumerConfig.Order), // 是否啟用有序消費
-		consumer.WithConsumeConcurrentlyMaxSpan(10),
+		// consumer.WithConsumeConcurrentlyMaxSpan(10),
 		consumer.WithRetry(2),
 		consumer.WithConsumerModel(getConsumerMode(consumerConfig.ConsumerMode)),
-	)
+	}
+	options = append(options, opts...)
+
+	var err error
+	c, err := rocketmq.NewPushConsumer(options...)
 
 	if err != nil {
 		LogTool.LogFatalf("RockerMQ", "NewPushConsumer error: %s", err)
