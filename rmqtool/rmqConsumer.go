@@ -59,7 +59,7 @@ func InitializeConsumer(config *RmqConfig, consumerConfig *ConsumerConfig, opts 
 	}
 
 	// Graceful shutdown
-	signalChan := make(chan os.Signal)
+	signalChan := make(chan os.Signal, 1)
 	signal.Notify(signalChan, os.Interrupt, syscall.SIGTERM)
 	//register for interupt (Ctrl+C) and SIGTERM (docker)
 	<-signalChan

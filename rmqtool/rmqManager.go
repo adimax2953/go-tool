@@ -2,6 +2,7 @@ package rmqtool
 
 import (
 	"context"
+	"time"
 
 	LogTool "github.com/adimax2953/log-tool"
 	"github.com/apache/rocketmq-client-go/v2"
@@ -38,6 +39,7 @@ func InitializePublisher(config *RmqConfig) *Rmq {
 	p, err = rocketmq.NewProducer(
 		producer.WithNameServer(config.NameServers),
 		producer.WithRetry(2),
+		producer.WithSendMsgTimeout(10*time.Second),
 	)
 	if err != nil {
 		LogTool.LogFatal("NewProducer Error ", err)
