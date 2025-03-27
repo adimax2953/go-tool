@@ -82,6 +82,8 @@ func (rmq *Rmq) SendOneWay(msg *RmqMsg) error {
 	message := primitive.NewMessage(msg.Topic, msg.Body)
 	message.WithTag(msg.Tag)
 	message.WithKeys(msg.Keys)
-	err := p.SendOneWay(context.TODO(), message)
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	err := p.SendOneWay(ctx, message)
 	return err
 }
