@@ -63,8 +63,15 @@ func InitializeConsumer(config *RmqConfig, consumerConfig *ConsumerConfig, opts 
 	signal.Notify(signalChan, os.Interrupt, syscall.SIGTERM)
 	//register for interupt (Ctrl+C) and SIGTERM (docker)
 	<-signalChan
-	c.Unsubscribe(consumerConfig.Topic)
-	c.Shutdown()
+	err = c.Unsubscribe(consumerConfig.Topic)
+	if err != nil {
+		LogTool.LogErrorf("RockerMQ", "unsubscribe error: %s", err)
+	}
+	err = c.Shutdown()
+	if err != nil {
+		LogTool.LogErrorf("RockerMQ", "shutdown error: %s", err)
+	}
+	LogTool.LogInfof("RockerMQ", "consumer shutdown: %v", consumerConfig)
 }
 
 func gerGroupName(config *ConsumerConfig) string {
