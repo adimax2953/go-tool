@@ -34,6 +34,28 @@ func SetRLogLevelToError() {
 	rlog.SetLogLevel("error")
 }
 
+func InitializeQueuePublisher(config *RmqConfig) *Rmq {
+	var err error
+	p, err = rocketmq.NewProducer(
+		producer.WithNameServer(config.NameServers),
+		producer.WithRetry(2),
+		producer.WithSendMsgTimeout(10*time.Second),
+		producer.WithQueueSelector(producer.NewHashQueueSelector()),
+	)
+	if err != nil {
+		LogTool.LogFatal("NewProducer Error ", err)
+	}
+
+	err = p.Start()
+	if err != nil {
+		LogTool.LogFatal("start produce Error ", err)
+	}
+
+	return &Rmq{
+		Producer: &p,
+	}
+}
+
 func InitializePublisher(config *RmqConfig) *Rmq {
 	var err error
 	p, err = rocketmq.NewProducer(
@@ -55,10 +77,15 @@ func InitializePublisher(config *RmqConfig) *Rmq {
 	}
 }
 
-func (rmq *Rmq) Send(msg *RmqMsg) error {
+func (rmq *Rmq) Send(msg *RmqMsg, shardingKey ...string) error {
 	message := primitive.NewMessage(msg.Topic, msg.Body)
 	message.WithTag(msg.Tag)
 	message.WithKeys(msg.Keys)
+
+	if len(shardingKey) > 0 && len(shardingKey[0]) > 0 {
+		message.WithShardingKey(shardingKey[0])
+	}
+
 	_, err := p.SendSync(context.TODO(), message)
 	if err != nil {
 		LogTool.LogErrorf("RocketMQ", "send message error: %s", err)
